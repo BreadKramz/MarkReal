@@ -1,8 +1,15 @@
-/* Display clarity overrides.
-   Keep the subtle CRT scanlines, but remove the dark edge vignette so the
-   entire desktop remains readable. */
+/* Screen clarity overrides.
+   This file loads after App.css so these rules always win. */
 
 .desktop::after {
-  background: none;
-  box-shadow: none;
+  display: none !important;
+  content: none !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+
+/* Keep the retro scanlines, but make them light enough that the entire
+   desktop stays clear from edge to edge. */
+.desktop::before {
+  opacity: 0.16;
 }
