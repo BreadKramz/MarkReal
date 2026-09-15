@@ -2,103 +2,143 @@
   box-sizing: border-box;
 }
 
+:root {
+  --desktop-black: #071011;
+  --desktop-deep: #0b1718;
+  --desktop-mid: #142426;
+  --retro-cream: #d8d5c8;
+  --retro-silver: #bdbdaf;
+  --retro-shadow: #444a45;
+  --retro-highlight: #efede1;
+  --terminal: #091314;
+  --terminal-text: #cbd2c7;
+  --muted: #89988f;
+  --title-start: #1f393c;
+  --title-end: #52635f;
+  --accent: #9daf9f;
+}
+
 button {
   font: inherit;
 }
 
+button:focus-visible {
+  outline: 1px dotted var(--retro-highlight);
+  outline-offset: 2px;
+}
+
 .desktop {
-  --cream: #d6d4c6;
-  --silver: #b9b8aa;
+  position: relative;
+  width: 100%;
   min-height: 100vh;
   height: 100vh;
   overflow: hidden;
-  position: relative;
-  background: linear-gradient(#0b1518 0 52%, #101a1b 52% 100%);
-  color: var(--cream);
-  font-family: "Courier New", monospace;
+  color: var(--retro-cream);
+  font-family: "Courier New", Courier, monospace;
   font-weight: 700;
-  letter-spacing: 0.025em;
-}
-
-.desktop::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 99;
-  background: radial-gradient(ellipse at center, #0000 43%, #000b 100%);
-  box-shadow: inset 0 0 95px #000;
+  letter-spacing: 0.02em;
+  background:
+    radial-gradient(circle at 72% 18%, rgba(119, 143, 130, 0.12), transparent 20%),
+    linear-gradient(180deg, #0d1b1e 0%, #0a1517 52%, #101b1c 100%);
+  isolation: isolate;
 }
 
 .desktop::before {
   content: "";
   position: absolute;
   inset: 0;
-  pointer-events: none;
   z-index: 100;
-  background: repeating-linear-gradient(0deg, #0000 0 2px, #0003 3px 4px);
-  mix-blend-mode: multiply;
+  pointer-events: none;
+  opacity: 0.38;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0) 0,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.25) 3px,
+    rgba(0, 0, 0, 0.25) 4px
+  );
+}
+
+.desktop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 99;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 42%,
+    rgba(0, 0, 0, 0.25) 72%,
+    rgba(0, 0, 0, 0.82) 100%
+  );
+  box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.72);
 }
 
 .noise {
   position: absolute;
   inset: 0;
-  opacity: 0.05;
+  z-index: 1;
   pointer-events: none;
-  background-image: radial-gradient(#d7e3d9 0.65px, transparent 0.8px);
+  opacity: 0.035;
+  background-image: radial-gradient(rgba(220, 230, 220, 0.9) 0.6px, transparent 0.7px);
   background-size: 5px 5px;
 }
 
 .moon {
   position: absolute;
-  width: 105px;
-  height: 105px;
-  right: 24%;
-  top: 13%;
+  top: 11%;
+  right: 22%;
+  width: 112px;
+  height: 112px;
   border-radius: 50%;
-  background: #aeb8aa;
-  box-shadow: 0 0 25px #9eaa9b44, inset -25px -10px #89968c;
-  opacity: 0.35;
+  opacity: 0.22;
+  background:
+    radial-gradient(circle at 36% 34%, rgba(225, 229, 213, 0.45) 0 5%, transparent 6%),
+    radial-gradient(circle at 62% 58%, rgba(50, 65, 61, 0.22) 0 8%, transparent 9%),
+    #b7c0b2;
+  box-shadow: 0 0 38px rgba(157, 177, 160, 0.16);
 }
 
 .stars {
   position: absolute;
-  left: 20%;
   top: 7%;
-  right: 10%;
-  color: #aab6aa;
-  font-size: 16px;
-  letter-spacing: 3em;
-  opacity: 0.35;
+  left: 17%;
+  right: 8%;
+  overflow: hidden;
+  color: #aebcaf;
+  font-size: 14px;
+  letter-spacing: 3.2em;
+  opacity: 0.28;
+  white-space: nowrap;
 }
 
 .city {
   position: absolute;
-  left: 0;
   right: 0;
   bottom: 43px;
+  left: 0;
   pointer-events: none;
 }
 
 .city-back {
-  height: 35%;
-  opacity: 0.3;
+  height: 37%;
+  opacity: 0.26;
   background: linear-gradient(
     90deg,
-    transparent 0 7%,
-    #263638 7% 12%,
+    transparent 0 6%,
+    #2c3c3e 6% 12%,
     transparent 12% 15%,
-    #263638 15% 23%,
+    #29393b 15% 23%,
     transparent 23% 29%,
-    #263638 29% 35%,
+    #304143 29% 35%,
     transparent 35% 42%,
     #263638 42% 49%,
     transparent 49% 55%,
-    #263638 55% 63%,
-    transparent 63% 70%,
-    #263638 70% 77%,
-    transparent 77% 83%,
-    #263638 83% 91%,
+    #304143 55% 63%,
+    transparent 63% 69%,
+    #29393b 69% 77%,
+    transparent 77% 82%,
+    #304143 82% 91%,
     transparent 91%
   );
 }
@@ -106,37 +146,37 @@ button {
 .city-back::before {
   content: "";
   position: absolute;
-  inset: 15% 0 0;
+  inset: 14% 0 0;
   background:
     repeating-linear-gradient(
       90deg,
-      transparent 0 42px,
-      #9baa9730 43px 46px,
-      transparent 47px 82px
+      transparent 0 41px,
+      rgba(183, 195, 160, 0.16) 42px 45px,
+      transparent 46px 81px
     ),
     repeating-linear-gradient(
       0deg,
-      transparent 0 30px,
-      #a4b19f22 31px 34px
+      transparent 0 29px,
+      rgba(178, 192, 164, 0.1) 30px 33px
     );
 }
 
 .city-front {
-  height: 21%;
-  opacity: 0.55;
+  height: 22%;
+  opacity: 0.62;
   background: linear-gradient(
     90deg,
-    #111d1e 0 9%,
+    #101c1d 0 9%,
     transparent 9% 12%,
-    #142122 12% 27%,
+    #132123 12% 27%,
     transparent 27% 30%,
-    #101c1d 30% 45%,
+    #0f1b1c 30% 45%,
     transparent 45% 49%,
-    #142122 49% 66%,
+    #132123 49% 66%,
     transparent 66% 70%,
-    #101c1d 70% 84%,
+    #0f1b1c 70% 84%,
     transparent 84% 87%,
-    #142122 87%
+    #132123 87%
   );
 }
 
@@ -148,48 +188,51 @@ button {
     repeating-linear-gradient(
       90deg,
       transparent 0 25px,
-      #b6b98c33 26px 29px,
+      rgba(200, 199, 145, 0.2) 26px 29px,
       transparent 30px 51px
     ),
     repeating-linear-gradient(
       0deg,
       transparent 0 24px,
-      #b6b98c22 25px 28px
+      rgba(200, 199, 145, 0.11) 25px 28px
     );
 }
 
 .desktop-icons {
   position: absolute;
-  left: 24px;
-  top: 22px;
-  width: 105px;
+  top: 20px;
+  left: 20px;
+  z-index: 3;
   display: grid;
-  gap: 12px;
-  z-index: 2;
+  width: 108px;
+  gap: 10px;
 }
 
 .desktop-item {
-  border: 0;
+  min-height: 66px;
+  padding: 4px;
+  border: 1px solid transparent;
   background: transparent;
-  color: #e0ded0;
+  color: #e2dfd2;
   text-align: center;
-  font-size: 11px;
+  font-size: 10px;
+  line-height: 1.2;
   text-shadow: 2px 2px 2px #000;
   cursor: default;
-  padding: 3px;
 }
 
+.desktop-item:hover,
 .desktop-item:focus {
-  outline: 1px dotted #ddd;
-  background: #d8d7c51f;
+  border-color: rgba(215, 219, 207, 0.25);
+  background: rgba(211, 216, 204, 0.07);
 }
 
 .pixel-icon {
-  height: 43px;
+  height: 40px;
+  color: #c4c5b9;
   font-family: Arial, sans-serif;
-  font-size: 37px;
-  line-height: 40px;
-  color: #bbbeb3;
+  font-size: 35px;
+  line-height: 38px;
   filter: drop-shadow(3px 3px 0 #101819);
 }
 
@@ -200,12 +243,18 @@ button {
 
 .window {
   position: absolute;
-  background: var(--silver);
+  overflow: hidden;
   color: #111614;
-  border: 2px solid #e9e7d8;
-  border-right-color: #353a35;
-  border-bottom-color: #353a35;
-  box-shadow: 1px 1px #111, 7px 9px 14px #0009;
+  background: var(--retro-silver);
+  border-top: 2px solid var(--retro-highlight);
+  border-left: 2px solid var(--retro-highlight);
+  border-right: 2px solid #4b504a;
+  border-bottom: 2px solid #4b504a;
+  border-radius: 1px;
+  box-shadow:
+    1px 1px 0 #171b18,
+    7px 9px 0 rgba(0, 0, 0, 0.28),
+    12px 16px 30px rgba(0, 0, 0, 0.34);
 }
 
 .app-window {
@@ -214,16 +263,17 @@ button {
 }
 
 .titlebar {
-  height: 27px;
-  background: linear-gradient(90deg, #243b3f, #465957);
-  color: #f0eee1;
-  padding: 3px 4px 3px 7px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 13px;
+  height: 28px;
+  padding: 3px 4px 3px 7px;
+  border-bottom: 1px solid #142020;
+  color: #f0eee2;
+  background: linear-gradient(90deg, var(--title-start), var(--title-end));
+  font-size: 12px;
+  letter-spacing: 0.025em;
   text-shadow: 1px 1px #000;
-  border-bottom: 1px solid #151d1d;
 }
 
 .draggable {
@@ -232,50 +282,85 @@ button {
 }
 
 .titlebar button {
-  height: 19px;
   min-width: 21px;
+  height: 20px;
   margin-left: 2px;
   padding: 0 3px;
-  background: #c2c1b5;
-  border: 2px outset #f0eee4;
+  border-top: 2px solid #f0eee4;
+  border-left: 2px solid #f0eee4;
+  border-right: 2px solid #555a54;
+  border-bottom: 2px solid #555a54;
+  background: #c3c2b6;
   color: #101312;
   line-height: 13px;
   text-shadow: none;
+  cursor: pointer;
+}
+
+.titlebar button:hover {
+  background: #d0cec0;
+}
+
+.titlebar button:active {
+  border-top-color: #555a54;
+  border-left-color: #555a54;
+  border-right-color: #f0eee4;
+  border-bottom-color: #f0eee4;
 }
 
 .menubar {
   height: 25px;
   padding: 5px 9px;
-  background: #c0bfb3;
-  border-bottom: 1px solid #74776f;
-  font-size: 11px;
+  border-bottom: 1px solid #777a72;
+  color: #1b201d;
+  background: #c2c1b5;
+  font-size: 10px;
 }
 
 .window-body {
-  margin: 4px;
-  border: 2px inset #e4e3d8;
-  background: #0b1415;
-  color: #c6cdc2;
   height: calc(100% - 62px);
+  margin: 4px;
   overflow: auto;
-  box-shadow: inset 0 0 28px #0006;
+  border-top: 2px solid #555b55;
+  border-left: 2px solid #555b55;
+  border-right: 2px solid #e4e2d6;
+  border-bottom: 2px solid #e4e2d6;
+  background: var(--terminal);
+  color: var(--terminal-text);
+  box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.38);
+  scrollbar-color: #777d75 #151f20;
+  scrollbar-width: thin;
 }
 
 .maximized {
-  left: 0 !important;
   top: 0 !important;
+  left: 0 !important;
   width: 100% !important;
   height: calc(100% - 43px) !important;
 }
 
 .hero {
-  height: 100%;
+  position: relative;
   display: flex;
   align-items: center;
+  height: 100%;
+  gap: 31px;
   padding: 25px 31px;
-  gap: 30px;
-  background: radial-gradient(circle at 26% 46%, #354849, #192829 27%, #091112 70%);
-  position: relative;
+  background:
+    linear-gradient(90deg, rgba(155, 174, 158, 0.035) 1px, transparent 1px),
+    linear-gradient(rgba(155, 174, 158, 0.025) 1px, transparent 1px),
+    radial-gradient(circle at 27% 47%, #314447 0%, #19292b 28%, #081112 70%);
+  background-size: 18px 18px, 18px 18px, auto;
+}
+
+.hero::before {
+  content: "PROFILE // 001";
+  position: absolute;
+  top: 9px;
+  right: 11px;
+  color: rgba(173, 187, 175, 0.38);
+  font-size: 7px;
+  letter-spacing: 0.18em;
 }
 
 .hero::after {
@@ -283,27 +368,32 @@ button {
   position: absolute;
   right: 10px;
   bottom: 7px;
-  color: #83918a;
-  font-size: 8px;
+  color: #76867d;
+  font-size: 7px;
   letter-spacing: 0.22em;
 }
 
 .portrait {
   position: relative;
-  min-width: 154px;
+  flex: 0 0 154px;
   width: 154px;
   height: 174px;
-  border: 1px solid #8f9991;
-  outline: 3px double #48524d;
-  background: linear-gradient(145deg, #7f8982, #4e5d59 55%, #202c2d);
-  box-shadow: inset 0 0 35px #0008, 4px 4px #050909;
   overflow: hidden;
+  border: 1px solid #87928a;
+  outline: 3px double #4a5650;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.025) 50%, transparent 50%),
+    linear-gradient(145deg, #7e8982, #4d5d59 55%, #202c2d);
+  background-size: 100% 4px, auto;
+  box-shadow:
+    inset 0 0 38px rgba(0, 0, 0, 0.58),
+    4px 4px 0 #050909;
 }
 
 .pixel-face {
   position: absolute;
-  left: 31px;
   top: 22px;
+  left: 31px;
   width: 90px;
   height: 112px;
   background: #aeb3a9;
@@ -325,8 +415,8 @@ button {
 .pixel-face::before {
   content: "";
   position: absolute;
-  left: 12px;
   top: 0;
+  left: 12px;
   width: 68px;
   height: 30px;
   background: #354441;
@@ -345,8 +435,8 @@ button {
 .pixel-face::after {
   content: "";
   position: absolute;
-  left: 25px;
   top: 76px;
+  left: 25px;
   width: 42px;
   height: 8px;
   background: #606b66;
@@ -356,10 +446,10 @@ button {
 .pixel-face i {
   position: absolute;
   top: 47px;
+  z-index: 2;
   width: 13px;
   height: 7px;
   background: #253331;
-  z-index: 2;
 }
 
 .pixel-face i:first-child {
@@ -372,8 +462,8 @@ button {
 
 .pixel-face b {
   position: absolute;
-  left: 43px;
   top: 55px;
+  left: 43px;
   width: 7px;
   height: 19px;
   background: #7b8680;
@@ -381,8 +471,8 @@ button {
 
 .pixel-face span {
   position: absolute;
-  left: -14px;
   top: 101px;
+  left: -14px;
   width: 120px;
   height: 70px;
   background: #596763;
@@ -391,59 +481,73 @@ button {
 
 .portrait-caption {
   position: absolute;
-  bottom: 4px;
   right: 5px;
-  font-size: 7px;
+  bottom: 4px;
   color: #bdc5bb;
+  font-size: 7px;
   letter-spacing: 0.15em;
 }
 
 .hero-copy {
-  max-width: 315px;
-}
-
-.hello {
-  color: #9cab9f !important;
+  max-width: 320px;
 }
 
 .hero-copy p {
   margin: 0 0 6px;
-  font-size: 12px;
-}
-
-.hero-copy h1 {
-  font-size: 34px;
-  line-height: 1;
-  margin: 3px 0 9px;
-  letter-spacing: 0.07em;
-  color: #e0dfd2;
-  text-shadow: 2px 2px #1f2928;
-}
-
-.hero-copy h2 {
-  font-size: 14px;
-  line-height: 1.45;
-  margin: 0 0 12px;
-}
-
-.tagline {
-  font-size: 10px !important;
-  font-style: italic;
-  color: #87968d !important;
-}
-
-.enter {
-  margin-top: 6px;
-  padding: 8px 14px;
-  background: #121d1e;
-  color: #d9ddd3;
-  border: 2px outset #77827b;
-  box-shadow: 2px 2px #030606;
   font-size: 11px;
 }
 
+.hello {
+  color: var(--accent) !important;
+  letter-spacing: 0.08em;
+}
+
+.hero-copy h1 {
+  margin: 4px 0 10px;
+  color: #e6e3d6;
+  font-size: clamp(29px, 2.4vw, 36px);
+  line-height: 1;
+  letter-spacing: 0.07em;
+  text-shadow: 2px 2px 0 #1b2827;
+}
+
+.hero-copy h2 {
+  margin: 0 0 12px;
+  color: #c4ccc2;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.tagline {
+  color: #87978d !important;
+  font-size: 9px !important;
+  font-style: italic;
+}
+
+.enter {
+  margin-top: 7px;
+  padding: 8px 14px;
+  border-top: 2px solid #89968d;
+  border-left: 2px solid #89968d;
+  border-right: 2px solid #303a36;
+  border-bottom: 2px solid #303a36;
+  background: #101b1c;
+  color: #d9ddd3;
+  box-shadow: 2px 2px 0 #030606;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background 100ms ease;
+}
+
 .enter:hover {
-  background: #273738;
+  background: #263738;
+}
+
+.enter:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #030606;
 }
 
 .cursor {
@@ -458,10 +562,10 @@ button {
 
 .terminal,
 .folder-view {
-  padding: 16px 19px;
-  font-size: 11px;
-  line-height: 1.5;
   min-height: 100%;
+  padding: 17px 20px;
+  font-size: 11px;
+  line-height: 1.55;
 }
 
 .terminal p {
@@ -469,121 +573,171 @@ button {
 }
 
 .terminal p:nth-child(odd) {
-  color: #d3d8ce;
+  color: #d6dbd2;
 }
 
 .folder-view h3 {
-  margin-top: 0;
-  border-bottom: 1px dashed #718078;
+  margin: 0 0 14px;
   padding-bottom: 9px;
+  border-bottom: 1px dashed #6f7e75;
+  color: #d7dbd2;
+  font-size: 11px;
+  letter-spacing: 0.12em;
 }
 
 .file-card {
-  border: 1px solid #59665f;
-  padding: 12px;
   margin: 10px 0;
-  background: #111c1c;
+  padding: 12px;
+  border: 1px solid #536159;
+  background: linear-gradient(90deg, #101b1c, #142122);
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.file-card:hover {
+  border-color: #84958a;
+  background: #1a2929;
 }
 
 .file-card small {
   display: block;
-  margin: 5px 0 0 25px;
-  color: #8f9b92;
+  margin: 6px 0 0 25px;
+  color: #87968d;
+  font-size: 9px;
 }
 
 .sysgrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  padding: 18px;
-  font-size: 11px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 16px;
+  font-size: 10px;
 }
 
 .sysgrid > div {
-  padding: 8px;
-  border: 1px dotted #59655e;
+  min-height: 58px;
+  padding: 10px;
+  border: 1px solid #44524b;
+  background: rgba(150, 169, 154, 0.035);
+}
+
+.sysgrid b {
+  display: inline-block;
+  margin-bottom: 5px;
+  color: #929f96;
+  font-size: 8px;
+  letter-spacing: 0.14em;
 }
 
 .player {
-  right: 3.2%;
   top: 5%;
+  right: 3.2%;
+  z-index: 1;
   width: 292px;
   height: 148px;
-  z-index: 1;
 }
 
 .player-body {
-  height: calc(100% - 27px);
-  padding: 13px;
   display: flex;
-  gap: 13px;
   align-items: center;
-  background: linear-gradient(135deg, #c2c0b2, #9fa298);
+  height: calc(100% - 28px);
+  gap: 13px;
+  padding: 13px;
+  color: #1d231f;
+  background: linear-gradient(135deg, #c8c6b9, #a4a79d);
 }
 
 .album {
-  width: 66px;
-  height: 66px;
-  background: radial-gradient(circle, #3b4d4b, #10191a 67%);
-  color: #c8cec4;
-  border: 2px inset #deddd1;
   display: grid;
   place-items: center;
-  box-shadow: inset 0 0 15px #000;
+  flex: 0 0 66px;
+  width: 66px;
+  height: 66px;
+  border-top: 2px solid #e3e1d4;
+  border-left: 2px solid #e3e1d4;
+  border-right: 2px solid #555c56;
+  border-bottom: 2px solid #555c56;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(0, 0, 0, 0.16) 4px),
+    radial-gradient(circle, #40514f, #10191a 68%);
+  color: #d0d5cb;
+  box-shadow: inset 0 0 16px #000;
 }
 
 .album span {
+  font-size: 17px;
+  line-height: 0.88;
   text-align: center;
-  font-size: 18px;
-  line-height: 0.85;
+  letter-spacing: 0.08em;
 }
 
 .player-body > div:last-child {
   flex: 1;
+  min-width: 0;
+  font-size: 9px;
+}
+
+.player-body strong {
   font-size: 10px;
+  letter-spacing: 0.05em;
+}
+
+.player-body small {
+  display: inline-block;
+  max-width: 155px;
+  overflow: hidden;
+  color: #555e58;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .track {
   height: 8px;
-  background: #505751;
   margin: 7px 0 3px;
-  border: 1px inset #ddd;
+  border-top: 1px solid #555c56;
+  border-left: 1px solid #555c56;
+  border-right: 1px solid #e1dfd3;
+  border-bottom: 1px solid #e1dfd3;
+  background: #505751;
 }
 
 .track i {
   display: block;
   width: 58%;
   height: 100%;
-  background: #d4d2c4;
+  background: #dedbcc;
 }
 
 .timecode {
-  text-align: right;
+  color: #535b55;
   font-size: 8px;
+  text-align: right;
 }
 
 .controls {
+  margin-top: 1px;
+  font-size: 10px;
   text-align: center;
-  font-size: 11px;
 }
 
 .note {
   position: absolute;
-  right: 4.1%;
   top: 25%;
-  width: 190px;
-  transform: rotate(1.2deg);
-  background: #c5c092;
-  color: #25271f;
-  box-shadow: 7px 9px 10px #0009;
+  right: 4.1%;
   z-index: 1;
+  width: 190px;
+  overflow: hidden;
+  transform: rotate(0.7deg);
+  border: 1px solid #817e60;
+  background: #c5c092;
+  color: #292a20;
+  box-shadow: 7px 9px 14px rgba(0, 0, 0, 0.48);
 }
 
 .note header {
   padding: 5px 8px;
-  background: #a7a47e;
   border-bottom: 1px solid #77745b;
-  font-size: 11px;
+  background: #a9a57e;
+  font-size: 10px;
 }
 
 .note header span {
@@ -591,121 +745,152 @@ button {
 }
 
 .note div {
-  padding: 20px;
-  line-height: 1.55;
-  font-size: 13px;
   min-height: 150px;
+  padding: 20px;
   background: repeating-linear-gradient(
-    #0000 0 23px,
-    #6d6c5728 24px
+    transparent 0 23px,
+    rgba(91, 89, 67, 0.15) 24px
   );
+  font-size: 12px;
+  line-height: 1.55;
 }
 
 .note small {
   float: right;
+  color: #565542;
 }
 
 .wall-copy {
   position: absolute;
   right: 3.2%;
   bottom: 9%;
-  font-size: 24px;
-  line-height: 1.08;
-  letter-spacing: 0.09em;
-  text-shadow: 3px 3px #000;
   color: #aeb7ae;
-  opacity: 0.86;
+  font-size: clamp(18px, 1.7vw, 25px);
+  line-height: 1.08;
+  letter-spacing: 0.1em;
+  text-shadow: 3px 3px 0 #000;
+  opacity: 0.72;
 }
 
 .taskbar {
   position: absolute;
+  right: 0;
   bottom: 0;
   left: 0;
-  right: 0;
-  height: 43px;
-  background: linear-gradient(#c5c4b8, #a6a79e);
-  border-top: 2px solid #eeeadd;
+  z-index: 110;
   display: flex;
   align-items: center;
-  padding: 4px;
+  height: 43px;
   gap: 4px;
+  padding: 4px;
+  border-top: 2px solid #efede1;
+  background: linear-gradient(#c8c6ba, #a9aaa0);
   color: #101312;
-  z-index: 110;
-  box-shadow: 0 -2px 7px #0007;
+  box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.35);
 }
 
 .start,
 .task {
   height: 32px;
+  border-top: 2px solid #eeece0;
+  border-left: 2px solid #eeece0;
+  border-right: 2px solid #565b55;
+  border-bottom: 2px solid #565b55;
   background: #bdbdb2;
-  border: 2px outset #ebe9dd;
-  font-weight: bold;
+  color: #151915;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .start {
-  font-size: 14px;
   padding: 0 11px;
+  font-size: 13px;
+}
+
+.start:hover,
+.task:hover {
+  background: #cac9bd;
 }
 
 .start.active,
 .task.active {
-  border-style: inset;
-  background: #969a93;
+  border-top-color: #565b55;
+  border-left-color: #565b55;
+  border-right-color: #eeece0;
+  border-bottom-color: #eeece0;
+  background: #989b94;
 }
 
 .task {
-  max-width: 135px;
-  min-width: 80px;
   flex: 0 1 135px;
-  text-align: left;
-  font-size: 9px;
+  min-width: 80px;
+  max-width: 135px;
   overflow: hidden;
+  padding: 0 7px;
+  font-size: 9px;
+  text-align: left;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .task-motto {
   margin-left: auto;
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  color: #444;
+  color: #4c514d;
+  font-size: 8px;
+  letter-spacing: 0.17em;
+  white-space: nowrap;
 }
 
 .tray {
-  height: 32px;
-  border: 2px inset #e0dfd5;
-  padding: 2px 7px;
   display: flex;
   align-items: center;
+  height: 32px;
   gap: 5px;
-  font-size: 10px;
+  padding: 2px 7px;
+  border-top: 2px solid #666b65;
+  border-left: 2px solid #666b65;
+  border-right: 2px solid #e0dfd5;
+  border-bottom: 2px solid #e0dfd5;
+  background: #aaaBA3;
+  font-size: 9px;
+  white-space: nowrap;
 }
 
 .tray small {
-  font-size: 8px;
+  font-size: 7px;
 }
 
 .start-menu {
   position: absolute;
-  left: 3px;
   bottom: 42px;
-  width: 255px;
-  height: 325px;
-  background: #bbbbae;
-  border: 2px outset #f1eee3;
-  color: #111;
+  left: 3px;
   z-index: 115;
   display: flex;
-  box-shadow: 6px 7px 10px #0009;
+  width: 255px;
+  height: 325px;
+  overflow: hidden;
+  border-top: 2px solid #f1eee3;
+  border-left: 2px solid #f1eee3;
+  border-right: 2px solid #4f554f;
+  border-bottom: 2px solid #4f554f;
+  background: #bbbbae;
+  color: #111;
+  box-shadow: 7px 8px 18px rgba(0, 0, 0, 0.52);
 }
 
 .start-side {
   width: 35px;
-  background: linear-gradient(#425653, #24383b);
-  color: #bfc6be;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
   padding: 10px 7px;
-  font-size: 17px;
+  transform: rotate(180deg);
+  background: linear-gradient(#50615d, #24383b);
+  color: #c2c9c0;
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  writing-mode: vertical-rl;
+}
+
+.start-side span {
+  color: #f1efe4;
 }
 
 .start-links {
@@ -716,13 +901,15 @@ button {
 .start-links button {
   display: flex;
   align-items: center;
-  gap: 12px;
   width: 100%;
   height: 43px;
+  gap: 12px;
   border: 0;
   background: transparent;
+  color: #171b18;
+  font-size: 10px;
   text-align: left;
-  font-size: 11px;
+  cursor: pointer;
 }
 
 .start-links button:hover {
@@ -731,35 +918,64 @@ button {
 }
 
 .start-links button span {
-  font-size: 21px;
+  width: 25px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.start-links hr {
+  border: 0;
+  border-top: 1px solid #7c8078;
+  border-bottom: 1px solid #dfddd1;
 }
 
 .boot {
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle, #0d1717, #010404 70%);
-  color: #b9c5b9;
   z-index: 200;
   display: grid;
   place-items: center;
-  font-size: 13px;
-  line-height: 1.75;
-  text-shadow: 0 0 5px #7d9b87;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(0, 0, 0, 0.3) 4px),
+    radial-gradient(circle, #0d1818, #010404 72%);
+  color: #b9c5b9;
+  font-size: 12px;
+  line-height: 1.8;
+  text-shadow: 0 0 6px rgba(125, 155, 135, 0.55);
 }
 
 .boot > div {
   width: min(550px, 85vw);
+  padding: 20px 0 20px 22px;
   border-left: 2px solid #87978a;
-  padding-left: 22px;
 }
 
 .boot b {
-  font-size: 17px;
+  font-size: 16px;
+  letter-spacing: 0.1em;
 }
 
 body.dragging {
   user-select: none;
   cursor: move;
+}
+
+@media (max-width: 1100px) {
+  .app-window {
+    width: 520px;
+  }
+
+  .player {
+    width: 260px;
+  }
+
+  .note {
+    width: 170px;
+  }
+
+  .task-motto {
+    display: none;
+  }
 }
 
 @media (max-width: 900px) {
@@ -778,10 +994,10 @@ body.dragging {
 
   .desktop-icons {
     position: relative;
-    left: auto;
     top: auto;
-    width: auto;
+    left: auto;
     grid-template-columns: repeat(4, 1fr);
+    width: auto;
     margin-bottom: 20px;
   }
 
@@ -789,9 +1005,9 @@ body.dragging {
   .player,
   .note {
     position: relative !important;
-    left: auto !important;
-    right: auto !important;
     top: auto !important;
+    right: auto !important;
+    left: auto !important;
     width: 100% !important;
     height: auto !important;
     min-height: 230px;
@@ -805,8 +1021,8 @@ body.dragging {
   }
 
   .hero {
-    padding: 22px;
     flex-direction: column;
+    padding: 24px;
     text-align: center;
   }
 
@@ -842,5 +1058,23 @@ body.dragging {
 
   .note {
     min-height: 180px;
+  }
+}
+
+@media (max-width: 560px) {
+  .desktop-icons {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .hero-copy h1 {
+    font-size: 27px;
+  }
+
+  .tray {
+    margin-left: auto;
+  }
+
+  .tray > :not(b):not(small) {
+    display: none;
   }
 }
