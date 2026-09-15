@@ -2,34 +2,24 @@ import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
 const definitions = {
-  welcome: { title: "Welcome.exe", pos: { x: 205, y: 65 } },
-  about: { title: "About_Me.exe", pos: { x: 175, y: 425 } },
-  projects: { title: "Projects.exe", pos: { x: 330, y: 170 } },
-  skills: { title: "Skills.exe", pos: { x: 430, y: 220 } },
-  experience: { title: "Experience.exe", pos: { x: 360, y: 280 } },
-  contact: { title: "Contact.exe", pos: { x: 500, y: 180 } },
-  system: { title: "System_Info.exe", pos: { x: 750, y: 470 } },
+  welcome: { title: "Welcome.exe", pos: { x: 185, y: 78 } },
+  about: { title: "About_Me.exe", pos: { x: 225, y: 445 } },
+  projects: { title: "Projects.exe", pos: { x: 320, y: 150 } },
+  skills: { title: "Skills.exe", pos: { x: 400, y: 190 } },
+  experience: { title: "Experience.exe", pos: { x: 355, y: 245 } },
+  contact: { title: "Contact.exe", pos: { x: 475, y: 170 } },
+  system: { title: "System_Info.exe", pos: { x: 785, y: 465 } },
 };
 
 const desktopItems = [
-  ["computer", "My Portfolio", "welcome"],
-  ["user", "About Me", "about"],
-  ["folder", "Projects", "projects"],
-  ["gear", "Skills", "skills"],
-  ["briefcase", "Experience", "experience"],
-  ["mail", "Contact", "contact"],
-  ["trash", "Recycle Bin", null],
+  ["▣", "Portfolio", "welcome"],
+  ["☺", "About Me", "about"],
+  ["▰", "Projects", "projects"],
+  ["◆", "Skills", "skills"],
+  ["▤", "Experience", "experience"],
+  ["✉", "Contact", "contact"],
+  ["♜", "Recycle Bin", null],
 ];
-
-const symbols = {
-  computer: "▣",
-  user: "♟",
-  folder: "▰",
-  gear: "⚙",
-  briefcase: "▤",
-  mail: "✉",
-  trash: "♜",
-};
 
 function RetroWindow({
   id,
@@ -62,16 +52,11 @@ function RetroWindow({
     const handleMouseMove = (event) => {
       if (!drag.current) return;
 
-      const nextX = Math.max(
-        0,
-        drag.current.windowX + event.clientX - drag.current.mouseX,
+      onMove(
+        id,
+        Math.max(0, drag.current.windowX + event.clientX - drag.current.mouseX),
+        Math.max(0, drag.current.windowY + event.clientY - drag.current.mouseY),
       );
-      const nextY = Math.max(
-        0,
-        drag.current.windowY + event.clientY - drag.current.mouseY,
-      );
-
-      onMove(id, nextX, nextY);
     };
 
     const handleMouseUp = () => {
@@ -92,7 +77,7 @@ function RetroWindow({
 
   return (
     <section
-      className={`window app-window ${state.maximized ? "maximized" : ""}`}
+      className={`window app-window window-${id} ${state.maximized ? "maximized" : ""}`}
       style={{ left: state.x, top: state.y, zIndex: state.z }}
       onMouseDown={() => onFocus(id)}
     >
@@ -101,22 +86,28 @@ function RetroWindow({
         onMouseDown={handleMouseDown}
         onDoubleClick={() => onMaximize(id)}
       >
-        <span>▣ {title}</span>
+        <span className="window-title">
+          <i className="window-dot" />
+          {title}
+        </span>
 
-        <div>
+        <div className="window-actions">
           <button
+            aria-label={`Minimize ${title}`}
             onMouseDown={(event) => event.stopPropagation()}
             onClick={() => onMinimize(id)}
           >
             _
           </button>
           <button
+            aria-label={`Maximize ${title}`}
             onMouseDown={(event) => event.stopPropagation()}
             onClick={() => onMaximize(id)}
           >
             □
           </button>
           <button
+            aria-label={`Close ${title}`}
             onMouseDown={(event) => event.stopPropagation()}
             onClick={() => onClose(id)}
           >
@@ -126,7 +117,10 @@ function RetroWindow({
       </header>
 
       <nav className="menubar">
-        <u>F</u>ile　 <u>E</u>dit　 <u>V</u>iew　 <u>H</u>elp
+        <span>File</span>
+        <span>Edit</span>
+        <span>View</span>
+        <span>Help</span>
       </nav>
 
       <div className="window-body">{children}</div>
@@ -157,7 +151,7 @@ function App() {
 
   useEffect(() => {
     const clock = setInterval(() => setNow(new Date()), 1000);
-    const bootTimer = setTimeout(() => setBooting(false), 1800);
+    const bootTimer = setTimeout(() => setBooting(false), 1500);
 
     return () => {
       clearInterval(clock);
@@ -187,17 +181,11 @@ function App() {
       minimized: false,
       z: ++zIndex.current,
     });
-
     setStartMenuOpen(false);
   };
 
-  const closeWindow = (id) => {
-    patchWindow(id, { open: false, minimized: false });
-  };
-
-  const minimizeWindow = (id) => {
-    patchWindow(id, { minimized: true });
-  };
+  const closeWindow = (id) => patchWindow(id, { open: false, minimized: false });
+  const minimizeWindow = (id) => patchWindow(id, { minimized: true });
 
   const maximizeWindow = (id) => {
     patchWindow(id, {
@@ -206,144 +194,184 @@ function App() {
     });
   };
 
-  const moveWindow = (id, x, y) => {
-    patchWindow(id, { x, y });
-  };
+  const moveWindow = (id, x, y) => patchWindow(id, { x, y });
 
   const windowContent = {
     welcome: (
       <div className="hero">
-        <div className="portrait">
-          <div className="pixel-face">
-            <i />
-            <i />
-            <b />
-            <span />
-          </div>
-          <div className="portrait-caption">MR // 04</div>
-        </div>
-
         <div className="hero-copy">
+          <p className="eyebrow">PORTFOLIO / 2026</p>
           <p className="hello">&gt; Hello, I'm</p>
           <h1>
-            MARK REAL<span className="cursor">_</span>
+            MARK
+            <br />
+            REAL<span className="cursor">_</span>
           </h1>
-          <h2>
-            Computer Science Student
-            <br />
-            Developer
-            <br />
-            Problem Solver
-          </h2>
-          <p className="tagline">“Still a work in progress...”</p>
-          <button className="enter" onClick={() => openWindow("projects")}>
-            &gt; ENTER PORTFOLIO
-          </button>
+          <p className="role">Computer Science Student · Developer</p>
+          <p className="tagline">
+            Building thoughtful software, learning through the process.
+          </p>
+
+          <div className="hero-actions">
+            <button className="primary-action" onClick={() => openWindow("projects")}>
+              View Projects
+            </button>
+            <button className="secondary-action" onClick={() => openWindow("about")}>
+              About Me
+            </button>
+          </div>
+        </div>
+
+        <div className="portrait-panel" aria-hidden="true">
+          <div className="portrait-grid" />
+          <div className="pixel-avatar">
+            <div className="avatar-hair" />
+            <div className="avatar-face">
+              <i />
+              <i />
+              <b />
+            </div>
+            <div className="avatar-body" />
+          </div>
+          <span>MR // PROFILE</span>
         </div>
       </div>
     ),
 
     about: (
-      <div className="terminal">
-        <p>C:\Portfolio&gt; whoami</p>
-        <p>Mark Real</p>
-        <p>C:\Portfolio&gt; about --me</p>
+      <div className="about-content">
+        <div className="terminal-label">C:\PORTFOLIO\ABOUT&gt;</div>
+        <h3>About me</h3>
         <p>
-          A Computer Science student who likes building web applications,
-          exploring new technologies, and turning ideas into reality.
+          I'm a Computer Science student focused on creating practical,
+          thoughtful web experiences and learning how software works from the
+          inside out.
         </p>
         <p>
-          I learn by making things — one project, one bug, and one small step at
-          a time.
+          I enjoy turning ideas into working projects, refining the details,
+          and improving with every build.
         </p>
-        <p>
-          C:\Portfolio&gt; <span className="cursor">_</span>
-        </p>
+        <div className="terminal-prompt">
+          ready<span className="cursor">_</span>
+        </div>
       </div>
     ),
 
     projects: (
-      <div className="folder-view">
-        <h3>PROJECT DIRECTORY</h3>
-
-        <div className="file-card">
-          ▰ <b>Church Management System</b>
-          <small>React • Supabase • Vercel</small>
+      <div className="project-list">
+        <div className="section-heading">
+          <span>01</span>
+          <div>
+            <small>SELECTED WORK</small>
+            <h3>Projects</h3>
+          </div>
         </div>
 
-        <div className="file-card">
-          ▰ <b>PortfolioOS</b>
-          <small>React • CSS • questionable amounts of caffeine</small>
-        </div>
+        <article className="project-card">
+          <div className="project-number">01</div>
+          <div>
+            <h4>Church Management System</h4>
+            <p>Centralized web platform for church records and services.</p>
+            <small>REACT / SUPABASE / VERCEL</small>
+          </div>
+        </article>
+
+        <article className="project-card">
+          <div className="project-number">02</div>
+          <div>
+            <h4>PortfolioOS</h4>
+            <p>An interactive retro-desktop portfolio built in React.</p>
+            <small>REACT / CSS / UI SYSTEMS</small>
+          </div>
+        </article>
       </div>
     ),
 
     skills: (
-      <div className="terminal">
-        <p>C:\Skills&gt; dir</p>
-        <p>HTML　CSS　JavaScript　React</p>
-        <p>TailwindCSS　Supabase　Git/GitHub</p>
-        <p>PHP　Laravel　MySQL</p>
-        <p>Problem Solving　UI Development</p>
-        <p>
-          C:\Skills&gt; <span className="cursor">_</span>
-        </p>
+      <div className="skills-content">
+        <div className="section-heading compact">
+          <span>02</span>
+          <div>
+            <small>TOOLKIT</small>
+            <h3>Skills</h3>
+          </div>
+        </div>
+        <div className="skill-grid">
+          <span>HTML</span>
+          <span>CSS</span>
+          <span>JavaScript</span>
+          <span>React</span>
+          <span>TailwindCSS</span>
+          <span>Supabase</span>
+          <span>Git / GitHub</span>
+          <span>PHP / Laravel</span>
+          <span>MySQL</span>
+        </div>
       </div>
     ),
 
     experience: (
-      <div className="folder-view">
-        <h3>EXPERIENCE.LOG</h3>
-        <p>
-          <b>Computer Science Student</b>
-        </p>
-        <p>
-          Building academic and personal software projects while learning
-          modern development workflows.
-        </p>
-        <hr />
-        <p>
-          <b>On-the-Job Training</b>
-        </p>
-        <p>Hands-on professional workplace and technical experience.</p>
+      <div className="experience-content">
+        <div className="section-heading compact">
+          <span>03</span>
+          <div>
+            <small>JOURNEY</small>
+            <h3>Experience</h3>
+          </div>
+        </div>
+        <div className="timeline-item">
+          <span>NOW</span>
+          <div>
+            <b>Computer Science Student</b>
+            <p>Academic and personal software development projects.</p>
+          </div>
+        </div>
+        <div className="timeline-item">
+          <span>OJT</span>
+          <div>
+            <b>On-the-Job Training</b>
+            <p>Professional workplace and hands-on technical experience.</p>
+          </div>
+        </div>
       </div>
     ),
 
     contact: (
-      <div className="terminal">
-        <p>C:\Portfolio&gt; contact --open</p>
-        <p>GitHub: BreadKramz</p>
-        <p>Email: add_your_email_here</p>
-        <p>Location: Dumaguete City, Philippines</p>
-        <br />
-        <p>Let's build something interesting.</p>
-        <p>
-          C:\Portfolio&gt; <span className="cursor">_</span>
-        </p>
+      <div className="contact-content">
+        <p className="eyebrow">CONTACT CHANNEL</p>
+        <h3>Let's build something.</h3>
+        <p>GitHub / BreadKramz</p>
+        <p>Email / add_your_email_here</p>
+        <div className="terminal-prompt">
+          awaiting_message<span className="cursor">_</span>
+        </div>
       </div>
     ),
 
     system: (
-      <div className="sysgrid">
-        <div>
-          <b>USER</b>
-          <br />
-          Mark Real
+      <div className="system-content">
+        <div className="system-head">
+          <span className="status-light" />
+          SYSTEM ONLINE
         </div>
-        <div>
-          <b>OS</b>
-          <br />
-          PortfolioOS v1.0
-        </div>
-        <div>
-          <b>LOCATION</b>
-          <br />
-          Dumaguete, PH
-        </div>
-        <div>
-          <b>STATUS</b>
-          <br />● Building...
-        </div>
+        <dl>
+          <div>
+            <dt>USER</dt>
+            <dd>Mark Real</dd>
+          </div>
+          <div>
+            <dt>OS</dt>
+            <dd>PortfolioOS 2.0</dd>
+          </div>
+          <div>
+            <dt>ROLE</dt>
+            <dd>CS Student</dd>
+          </div>
+          <div>
+            <dt>STATUS</dt>
+            <dd>Building</dd>
+          </div>
+        </dl>
       </div>
     ),
   };
@@ -355,33 +383,38 @@ function App() {
     >
       {booting && (
         <div className="boot">
-          <div>
-            <b>MARKREAL BIOS v1.0</b>
-            <p>Memory test ............... 16384 MB OK</p>
-            <p>Loading creativity ........ OK</p>
-            <p>Mounting /projects ........ OK</p>
-            <p>
-              Starting PortfolioOS<span className="cursor">_</span>
-            </p>
+          <div className="boot-logo">MR</div>
+          <div className="boot-copy">
+            <b>PORTFOLIO OS</b>
+            <span>Initializing workspace...</span>
+            <div className="boot-progress">
+              <i />
+            </div>
           </div>
         </div>
       )}
 
+      <div className="desktop-glow" />
       <div className="moon" />
+      <div className="stars">·　.　　·　　　.　·　　　.</div>
       <div className="city city-back" />
       <div className="city city-front" />
-      <div className="stars">·　.　　·　　　.　·　　　.</div>
       <div className="noise" />
 
+      <div className="desktop-brand">
+        <span>MR</span>
+        <small>PORTFOLIO OS</small>
+      </div>
+
       <aside className="desktop-icons">
-        {desktopItems.map(([type, label, id]) => (
+        {desktopItems.map(([symbol, label, id]) => (
           <button
             className="desktop-item"
             key={label}
             onDoubleClick={() => openWindow(id)}
           >
-            <div className={`pixel-icon ${type}`}>{symbols[type]}</div>
-            <span>{label}</span>
+            <span className="pixel-icon">{symbol}</span>
+            <span className="icon-label">{label}</span>
           </button>
         ))}
       </aside>
@@ -402,54 +435,58 @@ function App() {
         </RetroWindow>
       ))}
 
-      <section className="player window">
+      <section className="player window utility-window">
         <header className="titlebar">
-          <span>♫ Now Playing</span>
-          <button>×</button>
-        </header>
-
-        <div className="player-body">
-          <div className="album">
-            <span>
-              LO
-              <br />
-              FI
-            </span>
+          <span className="window-title">
+            <i className="window-dot" />
+            now_playing.exe
+          </span>
+          <div className="window-actions">
+            <button>×</button>
           </div>
-
-          <div>
-            <strong>chill.exe</strong>
-            <br />
-            <small>late_night_coding.mp3</small>
+        </header>
+        <div className="player-body">
+          <div className="album-art">
+            <span>LO</span>
+            <span>FI</span>
+          </div>
+          <div className="player-info">
+            <small>NOW PLAYING</small>
+            <b>late night coding</b>
+            <span>chill.exe</span>
             <div className="track">
               <i />
             </div>
-            <div className="timecode">2:17 / 3:45</div>
-            <div className="controls">|◀　▶　▶|</div>
+            <div className="player-bottom">
+              <span>02:17</span>
+              <span>◀　▶　▶|</span>
+              <span>03:45</span>
+            </div>
           </div>
         </div>
       </section>
 
       <section className="note">
         <header>
-          Note.txt <span>×</span>
+          <span>note.txt</span>
+          <span>×</span>
         </header>
         <div>
-          <b>GOOD IDEAS</b>
-          <br />
-          start with a
-          <br />
-          <u>curious mind.</u>
-          <br />
-          <br />
-          <small>— Mark</small>
+          <small>REMINDER / 001</small>
+          <p>
+            Good ideas start
+            <br />
+            with a curious mind.
+          </p>
+          <b>— MARK</b>
         </div>
       </section>
 
       <div className="wall-copy">
+        <small>PERSONAL SYSTEM / 2026</small>
         SMALL STEPS
         <br />
-        BIGGER THINGS<span className="cursor">_</span>
+        <span>BIGGER THINGS.</span>
       </div>
 
       {startMenuOpen && (
@@ -457,21 +494,26 @@ function App() {
           className="start-menu"
           onMouseDown={(event) => event.stopPropagation()}
         >
-          <div className="start-side">
-            PORTFOLIO<span>OS</span>
+          <div className="start-menu-head">
+            <span className="start-avatar">MR</span>
+            <div>
+              <b>Mark Real</b>
+              <small>Computer Science</small>
+            </div>
           </div>
-
           <div className="start-links">
-            {desktopItems.slice(0, 6).map(([type, label, id]) => (
+            {desktopItems.slice(0, 6).map(([symbol, label, id]) => (
               <button key={id} onClick={() => openWindow(id)}>
-                <span>{symbols[type]}</span>
-                {label}
+                <span>{symbol}</span>
+                <div>
+                  <b>{label}</b>
+                  <small>Open {label.toLowerCase()}</small>
+                </div>
               </button>
             ))}
-
-            <hr />
-
-            <button onClick={() => setBooting(true)}>▣ Restart...</button>
+          </div>
+          <div className="start-footer">
+            <button onClick={() => setBooting(true)}>↻ Restart</button>
           </div>
         </div>
       )}
@@ -484,36 +526,44 @@ function App() {
           className={`start ${startMenuOpen ? "active" : ""}`}
           onClick={() => setStartMenuOpen((current) => !current)}
         >
-          ▦ Start
+          <span>MR</span>
+          Start
         </button>
 
-        {Object.entries(windows)
-          .filter(([, windowState]) => windowState.open)
-          .map(([id, windowState]) => (
-            <button
-              key={id}
-              className={`task ${!windowState.minimized ? "active" : ""}`}
-              onClick={() =>
-                windowState.minimized
-                  ? openWindow(id)
-                  : minimizeWindow(id)
-              }
-            >
-              ▣ {definitions[id].title}
-            </button>
-          ))}
+        <div className="task-divider" />
 
-        <div className="task-motto">CODE　CREATE　IMPROVE</div>
+        <div className="task-list">
+          {Object.entries(windows)
+            .filter(([, windowState]) => windowState.open)
+            .map(([id, windowState]) => (
+              <button
+                key={id}
+                className={`task ${!windowState.minimized ? "active" : ""}`}
+                onClick={() =>
+                  windowState.minimized
+                    ? openWindow(id)
+                    : minimizeWindow(id)
+                }
+              >
+                <i />
+                {definitions[id].title}
+              </button>
+            ))}
+        </div>
+
+        <div className="task-motto">CODE / CREATE / IMPROVE</div>
 
         <div className="tray">
-          ▥ ♬ ▰
-          <b>
-            {now.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </b>
-          <small>{now.toLocaleDateString()}</small>
+          <span className="tray-icons">▥　♬　▰</span>
+          <div>
+            <b>
+              {now.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </b>
+            <small>{now.toLocaleDateString()}</small>
+          </div>
         </div>
       </footer>
     </main>
