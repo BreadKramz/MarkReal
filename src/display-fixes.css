@@ -1,0 +1,8 @@
+/* Display clarity overrides.
+   Keep the subtle CRT scanlines, but remove the dark edge vignette so the
+   entire desktop remains readable. */
+
+.desktop::after {
+  background: none;
+  box-shadow: none;
+}
