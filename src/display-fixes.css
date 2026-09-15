@@ -8,8 +8,355 @@
   box-shadow: none !important;
 }
 
-/* Keep the retro scanlines, but make them light enough that the entire
-   desktop stays clear from edge to edge. */
 .desktop::before {
   opacity: 0.16;
+}
+
+/* Theme switch ---------------------------------------------------------- */
+
+.theme-toggle {
+  position: fixed;
+  top: 18px;
+  right: 172px;
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 145px;
+  height: 38px;
+  padding: 5px 7px;
+  border-top: 2px solid #e9e6d8;
+  border-left: 2px solid #e9e6d8;
+  border-right: 2px solid #484f49;
+  border-bottom: 2px solid #484f49;
+  background: #bcbcaf;
+  color: #151915;
+  font-family: "Courier New", Courier, monospace;
+  cursor: pointer;
+  box-shadow: 3px 4px 0 rgba(0, 0, 0, 0.28);
+}
+
+.theme-toggle:active {
+  border-top-color: #484f49;
+  border-left-color: #484f49;
+  border-right-color: #e9e6d8;
+  border-bottom-color: #e9e6d8;
+}
+
+.theme-toggle-icon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  background: #263a3b;
+  color: #e7e4d7;
+  font-size: 15px;
+}
+
+.theme-toggle-copy {
+  display: grid;
+  margin-right: auto;
+  text-align: left;
+  line-height: 1;
+}
+
+.theme-toggle-copy small {
+  margin-bottom: 3px;
+  color: #626a64;
+  font-size: 6px;
+  letter-spacing: 0.14em;
+}
+
+.theme-toggle-copy b {
+  font-size: 8px;
+  letter-spacing: 0.08em;
+}
+
+.theme-switch {
+  position: relative;
+  width: 29px;
+  height: 15px;
+  border: 1px inset #d9d7cb;
+  background: #747b75;
+}
+
+.theme-switch i {
+  position: absolute;
+  top: 2px;
+  width: 9px;
+  height: 9px;
+  background: #ece9db;
+  transition: left 160ms ease;
+}
+
+.theme-switch.is-dark i {
+  left: 2px;
+}
+
+.theme-switch.is-light i {
+  left: 16px;
+}
+
+/* Light mode ------------------------------------------------------------ */
+
+html[data-theme="light"] body {
+  background: #d8d6c9;
+}
+
+html[data-theme="light"] .desktop {
+  --ink: #26302c;
+  --muted: #68756e;
+  --desktop: #c8d3cc;
+  --desktop-2: #dce2dc;
+  --panel: #d2d0c3;
+  --panel-light: #fffdf1;
+  --panel-dark: #666d66;
+  --terminal: #e5e8df;
+  --terminal-2: #d7ddd5;
+  --green: #49675d;
+  --green-bright: #314f47;
+  --yellow: #d7cc8e;
+  --title-a: #55736e;
+  --title-b: #8aa099;
+  color: #26302c;
+  background:
+    radial-gradient(circle at 67% 22%, rgba(255, 255, 255, 0.7), transparent 25%),
+    linear-gradient(180deg, #dfe7e1 0%, #cbd8d1 54%, #bccbc4 100%);
+}
+
+html[data-theme="light"] .desktop::before {
+  opacity: 0.045;
+}
+
+html[data-theme="light"] .desktop-glow {
+  background: radial-gradient(
+    ellipse,
+    rgba(255, 255, 255, 0.55),
+    transparent 65%
+  );
+}
+
+html[data-theme="light"] .moon {
+  opacity: 0.32;
+  background: #f3eee0;
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.45);
+}
+
+html[data-theme="light"] .stars {
+  color: #6d8178;
+  opacity: 0.18;
+}
+
+html[data-theme="light"] .city-back {
+  opacity: 0.2;
+  filter: brightness(1.6);
+}
+
+html[data-theme="light"] .city-front {
+  opacity: 0.27;
+  filter: brightness(1.7);
+}
+
+html[data-theme="light"] .desktop-brand {
+  color: rgba(42, 64, 57, 0.58);
+}
+
+html[data-theme="light"] .desktop-brand span {
+  border-color: rgba(42, 64, 57, 0.35);
+}
+
+html[data-theme="light"] .desktop-item {
+  color: #273832;
+}
+
+html[data-theme="light"] .desktop-item:hover,
+html[data-theme="light"] .desktop-item:focus {
+  border-color: rgba(45, 70, 61, 0.28);
+  background: rgba(255, 255, 255, 0.22);
+}
+
+html[data-theme="light"] .pixel-icon {
+  border-color: rgba(54, 75, 68, 0.4);
+  background: linear-gradient(145deg, #e9eee8, #aabbb3);
+  color: #344c44;
+  text-shadow: none;
+  box-shadow: 2px 2px 0 rgba(54, 72, 66, 0.35);
+}
+
+html[data-theme="light"] .icon-label {
+  text-shadow: 1px 1px rgba(255, 255, 255, 0.65);
+}
+
+html[data-theme="light"] .window {
+  background: #d2d0c3;
+  box-shadow:
+    1px 1px 0 #5c645e,
+    6px 7px 0 rgba(63, 76, 69, 0.13),
+    14px 18px 30px rgba(53, 68, 60, 0.16);
+}
+
+html[data-theme="light"] .titlebar {
+  border-bottom-color: #53665f;
+  background: linear-gradient(90deg, #55736e, #8aa099);
+  color: #fffdf2;
+  text-shadow: 1px 1px #41534d;
+}
+
+html[data-theme="light"] .menubar {
+  background: #dddace;
+  color: #26302c;
+}
+
+html[data-theme="light"] .window-body {
+  border-top-color: #6d7770;
+  border-left-color: #6d7770;
+  border-right-color: #f5f2e6;
+  border-bottom-color: #f5f2e6;
+  background: #e6e9e1;
+  color: #293831;
+  box-shadow: inset 0 0 25px rgba(64, 80, 71, 0.07);
+}
+
+html[data-theme="light"] .hero {
+  background:
+    linear-gradient(90deg, rgba(65, 91, 81, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(65, 91, 81, 0.04) 1px, transparent 1px),
+    radial-gradient(circle at 70% 42%, #f2f3eb 0%, #dde4dd 42%, #cdd9d2 100%);
+  background-size: 20px 20px, 20px 20px, auto;
+}
+
+html[data-theme="light"] .hero h1,
+html[data-theme="light"] .about-content h3,
+html[data-theme="light"] .contact-content h3,
+html[data-theme="light"] .section-heading h3 {
+  color: #273a34;
+  text-shadow: none;
+}
+
+html[data-theme="light"] .hello,
+html[data-theme="light"] .role,
+html[data-theme="light"] .tagline,
+html[data-theme="light"] .about-content p,
+html[data-theme="light"] .contact-content p,
+html[data-theme="light"] .terminal-label,
+html[data-theme="light"] .terminal-prompt {
+  color: #50675e;
+}
+
+html[data-theme="light"] .primary-action {
+  background: #54736c;
+  color: #fffdf2;
+}
+
+html[data-theme="light"] .secondary-action {
+  background: #d4ddd6;
+  color: #263a33;
+}
+
+html[data-theme="light"] .portrait-panel {
+  border-color: #7e9289;
+  background: linear-gradient(145deg, #dce4dd, #b8c8c0 58%, #9aafa5);
+  box-shadow: inset 0 0 30px rgba(43, 65, 57, 0.16), 4px 4px 0 #879990;
+}
+
+html[data-theme="light"] .project-card,
+html[data-theme="light"] .skill-grid span,
+html[data-theme="light"] .system-content dl div {
+  border-color: #a3b0a8;
+  background: #d9e0d9;
+  color: #31463e;
+}
+
+html[data-theme="light"] .project-card:hover {
+  border-color: #71877d;
+  background: #e6e9e1;
+}
+
+html[data-theme="light"] .project-card h4,
+html[data-theme="light"] .timeline-item b,
+html[data-theme="light"] .system-content dd {
+  color: #30473f;
+}
+
+html[data-theme="light"] .project-card p,
+html[data-theme="light"] .timeline-item p {
+  color: #5c7067;
+}
+
+html[data-theme="light"] .timeline-item,
+html[data-theme="light"] .system-head {
+  border-color: #aab6af;
+}
+
+html[data-theme="light"] .player-body {
+  background: linear-gradient(135deg, #e1dfd3, #c7cbc3);
+}
+
+html[data-theme="light"] .note {
+  box-shadow: 8px 10px 18px rgba(56, 64, 57, 0.2);
+}
+
+html[data-theme="light"] .wall-copy {
+  color: rgba(43, 65, 57, 0.62);
+  text-shadow: 1px 1px rgba(255, 255, 255, 0.55);
+}
+
+html[data-theme="light"] .wall-copy span {
+  color: rgba(37, 58, 51, 0.8);
+}
+
+html[data-theme="light"] .taskbar {
+  border-top-color: #fffdf1;
+  background: linear-gradient(#deddd2, #c7cbc3);
+  color: #1e2823;
+  box-shadow: 0 -3px 10px rgba(55, 68, 61, 0.14);
+}
+
+html[data-theme="light"] .start,
+html[data-theme="light"] .task {
+  background: #d3d3c8;
+  color: #202a25;
+}
+
+html[data-theme="light"] .start > span {
+  background: #5b7972;
+}
+
+html[data-theme="light"] .tray {
+  background: #c6cbc4;
+}
+
+html[data-theme="light"] .start-menu {
+  background: #d3d2c7;
+}
+
+html[data-theme="light"] .start-menu-head {
+  background: linear-gradient(90deg, #55736e, #8ca199);
+}
+
+html[data-theme="light"] .theme-toggle {
+  border-top-color: #fffdf1;
+  border-left-color: #fffdf1;
+  background: #d5d4c9;
+  color: #23302a;
+  box-shadow: 3px 4px 0 rgba(58, 71, 64, 0.2);
+}
+
+html[data-theme="light"] .theme-toggle-icon {
+  background: #718d84;
+  color: #fffdf1;
+}
+
+html[data-theme="light"] .theme-toggle-copy small {
+  color: #68756e;
+}
+
+@media (max-width: 900px) {
+  .theme-toggle {
+    position: fixed;
+    top: 8px;
+    right: 8px;
+    min-width: 126px;
+    height: 34px;
+  }
 }
