@@ -14,14 +14,14 @@ const definitions = {
 };
 
 const desktopItems = [
-  ["▣", "Portfolio", "welcome"],
-  ["☺", "About Me", "about"],
-  ["▰", "Projects", "projects"],
-  ["◆", "Skills", "skills"],
-  ["▤", "Experience", "experience"],
-  ["✉", "Contact", "contact"],
-  [">_", "Command Prompt", "cmd"],
-  ["♜", "Recycle Bin", null],
+  ["▦", "Portfolio", "welcome", "portfolio"],
+  ["●", "About Me", "about", "user"],
+  ["▤", "Projects", "projects", "folder"],
+  ["✦", "Skills", "skills", "skills"],
+  ["▥", "Experience", "experience", "document"],
+  ["✉", "Contact", "contact", "mail"],
+  [">_", "Command Prompt", "cmd", "terminal"],
+  ["♲", "Recycle Bin", null, "trash"],
 ];
 
 function RetroWindow({
@@ -582,13 +582,13 @@ function App() {
       </div>
 
       <aside className="desktop-icons">
-        {desktopItems.map(([symbol, label, id]) => (
+        {desktopItems.map(([symbol, label, id, iconType]) => (
           <button
             className="desktop-item"
             key={label}
             onDoubleClick={() => openWindow(id)}
           >
-            <span className="pixel-icon">{symbol}</span>
+            <span className={`pixel-icon icon-${iconType}`}><i>{symbol}</i></span>
             <span className="icon-label">{label}</span>
           </button>
         ))}
@@ -692,7 +692,7 @@ function App() {
             </div>
           </div>
           <div className="start-links">
-            {desktopItems.slice(0, 6).map(([symbol, label, id]) => (
+            {desktopItems.filter(([, , id]) => id).map(([symbol, label, id]) => (
               <button key={id} onClick={() => openWindow(id)}>
                 <span>{symbol}</span>
                 <div>
