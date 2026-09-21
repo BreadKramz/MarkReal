@@ -3170,9 +3170,59 @@ body.dragging .utility-drag-handle,
 
 /* Utility default placement refinement */
 .player {
-  top: 135px;
+  top: 165px;
 }
 
 .note {
   top: 355px;
+}
+
+
+/* Fullscreen choice integrated into lock screen */
+.lock-fullscreen {
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(82, 114, 138, 0.24);
+  text-align: left;
+}
+
+.lock-fullscreen > span {
+  color: #d59558;
+  font-size: 7px;
+  letter-spacing: .14em;
+}
+
+.lock-fullscreen p {
+  margin: 6px 0 9px;
+  color: #7894a5;
+  font-size: 7px;
+  line-height: 1.45;
+}
+
+.lock-fullscreen-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.lock-fullscreen-actions button {
+  flex: 1;
+  padding: 7px 5px;
+  border: 1px solid #355a72;
+  border-radius: 2px;
+  background: #0b293d;
+  color: #b9cbd5;
+  font: inherit;
+  font-size: 7px;
+  cursor: pointer;
+}
+
+.lock-fullscreen-actions button:first-child {
+  border-color: #9b6840;
+  background: linear-gradient(#a76f43, #68442e);
+  color: #fff0df;
+}
+
+.lock-fullscreen-actions button:hover {
+  border-color: #d59558;
+  color: #f2c58d;
 }
