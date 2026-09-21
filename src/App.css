@@ -3315,3 +3315,15 @@ body.dragging .utility-drag-handle,
     bottom: 70px;
   }
 }
+
+
+/* Animated wallpaper — preserve the lower harbor/city area */
+.desktop {
+  background-image:
+    linear-gradient(rgba(3, 10, 18, 0.12), rgba(3, 10, 18, 0.12)),
+    url("/background2.gif");
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
