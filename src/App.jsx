@@ -835,12 +835,16 @@ function App() {
           <div className="lock-time">
             <div className="lock-clock-row">
               <b className="lock-clock">
-                {now.toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  second: "2-digit",
-                  hour12: false,
-                })}
+                <span className="lock-main-time">
+                  {now.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                  })}
+                </span>
+                <span className="lock-clock-seconds" key={now.getSeconds()}>
+                  {String(now.getSeconds()).padStart(2, "0")}
+                </span>
               </b>
             </div>
             <span className="lock-date">
