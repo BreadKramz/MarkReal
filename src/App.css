@@ -4509,3 +4509,86 @@ body.icon-dragging .desktop-item.free-position:not(.settling) {
   20% { opacity: .9; }
   100% { opacity: 0; transform: scale(1.45); }
 }
+
+
+/* Desktop shortcuts reset: fixed layout, no drag grid or recycle-drop behavior */
+.desktop-icons {
+  pointer-events: auto;
+}
+
+.desktop-item {
+  pointer-events: auto;
+  cursor: default;
+}
+
+.desktop-item.free-position,
+.desktop-item.settling {
+  position: static;
+  left: auto !important;
+  top: auto !important;
+  margin: initial;
+  transition: none;
+}
+
+body.icon-dragging {
+  cursor: default;
+  user-select: auto;
+}
+
+.desktop-item.drop-target,
+.desktop-item.drop-target .pixel-icon {
+  animation: none;
+  transform: none;
+  box-shadow: none;
+}
+
+/* remove the desktop alignment-dot grid */
+.desktop:not(:has(.lockscreen)):not(:has(.boot))::after {
+  background-image: none;
+  opacity: 0;
+}
+
+/* Recycle Bin is display-only again */
+.recycle-bin-toolbar {
+  justify-content: flex-start;
+}
+
+/* Lock screen clock seconds */
+.lock-clock {
+  display: inline-flex;
+  align-items: baseline;
+  font-variant-numeric: tabular-nums;
+}
+
+.lock-seconds {
+  display: inline-block;
+  min-width: 1.9em;
+  margin-left: .03em;
+  font-size: .58em;
+  color: #efb36d;
+  transform-origin: center bottom;
+  animation: lockSecondTick 420ms cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes lockSecondTick {
+  0% {
+    opacity: .25;
+    transform: translateY(-5px) scale(.92);
+    filter: blur(1px);
+  }
+  45% {
+    opacity: 1;
+    transform: translateY(1px) scale(1.04);
+    filter: blur(0);
+  }
+  100% {
+    opacity: .9;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lock-seconds {
+    animation: none;
+  }
+}
