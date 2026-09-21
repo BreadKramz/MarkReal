@@ -4174,3 +4174,150 @@ body.dragging .desktop-item,
 .desktop-item:active {
   cursor: grabbing;
 }
+
+
+/* PortfolioOS desktop grid + stable icon dragging */
+.desktop::marker { display: none; }
+
+.desktop-icons {
+  pointer-events: none;
+}
+
+.desktop-item {
+  pointer-events: auto;
+}
+
+.desktop-item.free-position {
+  position: fixed;
+  z-index: 5;
+  transition: left 140ms ease, top 140ms ease, background 120ms ease;
+}
+
+body.icon-dragging .desktop-item.free-position {
+  transition: none;
+}
+
+body.icon-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+body.icon-dragging .desktop-item {
+  cursor: grabbing;
+}
+
+/* Recycle Bin window */
+.window-recycle {
+  width: min(560px, calc(100vw - 40px));
+}
+
+.recycle-bin-content {
+  min-height: 300px;
+  background: linear-gradient(180deg, rgba(8,28,42,.96), rgba(4,17,27,.98));
+}
+
+.recycle-bin-toolbar {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 11px;
+  border-bottom: 1px solid rgba(101,145,171,.28);
+}
+
+.recycle-bin-toolbar b {
+  color: #dce7eb;
+  font-size: 10px;
+  letter-spacing: .08em;
+}
+
+.recycle-bin-toolbar button {
+  padding: 7px 10px;
+  border: 1px solid #6e4d3b;
+  border-radius: 2px;
+  background: #42261e;
+  color: #efc3a4;
+  font: inherit;
+  font-size: 8px;
+  cursor: pointer;
+}
+
+.recycle-bin-toolbar button:disabled {
+  opacity: .35;
+  cursor: default;
+}
+
+.recycle-empty {
+  display: grid;
+  min-height: 255px;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  color: #7690a1;
+  text-align: center;
+}
+
+.recycle-empty > span {
+  color: #91adbd;
+  font-size: 48px;
+  opacity: .55;
+}
+
+.recycle-empty p {
+  margin: 3px 0;
+  color: #c5d5dd;
+  font-size: 11px;
+}
+
+.recycle-empty small {
+  font-size: 8px;
+}
+
+.recycle-files {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
+  gap: 9px;
+  padding: 13px;
+}
+
+.recycle-files button {
+  display: grid;
+  min-height: 105px;
+  place-items: center;
+  align-content: center;
+  gap: 7px;
+  padding: 10px 7px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  color: #d8e4e9;
+  font: inherit;
+  cursor: pointer;
+}
+
+.recycle-files button:hover {
+  border-color: rgba(91,161,204,.55);
+  background: rgba(43,111,153,.22);
+}
+
+.recycle-files button > span {
+  color: #8eb4ca;
+  font-size: 28px;
+}
+
+.recycle-files b {
+  font-size: 9px;
+}
+
+.recycle-files small {
+  color: #6f8999;
+  font-size: 7px;
+}
+
+/* faint alignment dots make the snap grid feel intentional without covering the wallpaper */
+.desktop:not(:has(.lockscreen)):not(:has(.boot))::after {
+  background-image: radial-gradient(circle, rgba(129,177,205,.16) 1px, transparent 1px);
+  background-size: 110px 104px;
+  background-position: 65px 65px;
+  opacity: .18;
+}
