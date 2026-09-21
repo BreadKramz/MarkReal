@@ -413,7 +413,9 @@ function App() {
         <p className="eyebrow">CONTACT CHANNEL</p>
         <h3>Let's build something.</h3>
         <p>GitHub / BreadKramz</p>
-        <p>Email / add_your_email_here</p>
+        <p>Email / realmarklesterj@gmail.com</p>
+        <p>Phone / 0945 605 7652 · 0962 516 8169</p>
+        <p>LinkedIn / Mark Lester Real</p>
         <div className="terminal-prompt">
           awaiting_message<span className="cursor">_</span>
         </div>
