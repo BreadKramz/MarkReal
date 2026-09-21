@@ -1085,7 +1085,14 @@ function App() {
           </div>
           <button
             type="button"
-            onClick={() => setRecycleWarning(false)}
+            onClick={() => {
+              setRecycleWarning(false);
+              const alertAudio = alertAudioRef.current;
+              if (alertAudio) {
+                alertAudio.pause();
+                alertAudio.currentTime = 0;
+              }
+            }}
           >
             ACKNOWLEDGE WARNING
           </button>
@@ -1113,7 +1120,7 @@ function App() {
         className="player window utility-window"
         style={utilityPositions.player.x === null ? undefined : { left: utilityPositions.player.x, top: utilityPositions.player.y, right: "auto" }}
       >
-        <audio ref={alertAudioRef} src="/music/alert.mp3" preload="auto" />
+        <audio ref={alertAudioRef} src="/music/alert.mp3" preload="auto" loop />
         <audio
           ref={audioRef}
           src="/music/lofi.mp3"
