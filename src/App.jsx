@@ -161,6 +161,10 @@ function App() {
   const [selectionBox, setSelectionBox] = useState(null);
   const selectionStart = useRef(null);
   const [contextMenu, setContextMenu] = useState(null);
+  const [selectedIcons, setSelectedIcons] = useState([]);
+  const [iconPositions, setIconPositions] = useState({});
+  const iconDrag = useRef(null);
+  const desktopIconRefs = useRef({});
   const zIndex = useRef(20);
   const utilityDrag = useRef(null);
   const [utilityPositions, setUtilityPositions] = useState({
@@ -373,8 +377,37 @@ function App() {
   const startDesktopSelection = (event) => {
     if (event.button !== 0 || event.target !== event.currentTarget || locked || booting) return;
     setContextMenu(null);
+    setSelectedIcons([]);
     selectionStart.current = { x: event.clientX, y: event.clientY };
     setSelectionBox({ x: event.clientX, y: event.clientY, width: 0, height: 0 });
+  };
+
+  const startIconDrag = (event, label) => {
+    if (event.button !== 0 || locked || booting) return;
+    event.stopPropagation();
+    setContextMenu(null);
+
+    const clickedSelected = selectedIcons.includes(label);
+    const movingLabels = clickedSelected && selectedIcons.length
+      ? selectedIcons
+      : [label];
+
+    if (!clickedSelected) setSelectedIcons([label]);
+
+    const origins = {};
+    movingLabels.forEach((name) => {
+      const element = desktopIconRefs.current[name];
+      if (!element) return;
+      const rect = element.getBoundingClientRect();
+      origins[name] = { x: rect.left, y: rect.top };
+    });
+
+    iconDrag.current = {
+      startX: event.clientX,
+      startY: event.clientY,
+      labels: movingLabels,
+      origins,
+    };
   };
 
   const showDesktopContextMenu = (event) => {
@@ -392,23 +425,63 @@ function App() {
     const moveSelection = (event) => {
       if (!selectionStart.current) return;
       const start = selectionStart.current;
-      setSelectionBox({
+      const box = {
         x: Math.min(start.x, event.clientX),
         y: Math.min(start.y, event.clientY),
         width: Math.abs(event.clientX - start.x),
         height: Math.abs(event.clientY - start.y),
+      };
+      setSelectionBox(box);
+
+      const hit = desktopItems
+        .map(([, label]) => label)
+        .filter((label) => {
+          const element = desktopIconRefs.current[label];
+          if (!element) return false;
+          const rect = element.getBoundingClientRect();
+          return (
+            rect.left < box.x + box.width &&
+            rect.right > box.x &&
+            rect.top < box.y + box.height &&
+            rect.bottom > box.y
+          );
+        });
+      setSelectedIcons(hit);
+    };
+
+    const moveIcons = (event) => {
+      if (!iconDrag.current) return;
+      const dx = event.clientX - iconDrag.current.startX;
+      const dy = event.clientY - iconDrag.current.startY;
+      setIconPositions((current) => {
+        const next = { ...current };
+        iconDrag.current.labels.forEach((label) => {
+          const origin = iconDrag.current.origins[label];
+          if (!origin) return;
+          const element = desktopIconRefs.current[label];
+          const width = element?.offsetWidth || 100;
+          const height = element?.offsetHeight || 92;
+          next[label] = {
+            x: Math.max(0, Math.min(window.innerWidth - width, origin.x + dx)),
+            y: Math.max(0, Math.min(window.innerHeight - 58 - height, origin.y + dy)),
+          };
+        });
+        return next;
       });
     };
 
     const stopSelection = () => {
       selectionStart.current = null;
+      iconDrag.current = null;
       window.setTimeout(() => setSelectionBox(null), 90);
     };
 
     window.addEventListener("mousemove", moveSelection);
+    window.addEventListener("mousemove", moveIcons);
     window.addEventListener("mouseup", stopSelection);
     return () => {
       window.removeEventListener("mousemove", moveSelection);
+      window.removeEventListener("mousemove", moveIcons);
       window.removeEventListener("mouseup", stopSelection);
     };
   }, []);
@@ -894,8 +967,11 @@ function App() {
       <aside className="desktop-icons">
         {desktopItems.map(([symbol, label, id, iconType]) => (
           <button
-            className="desktop-item"
+            ref={(element) => { desktopIconRefs.current[label] = element; }}
+            className={`desktop-item ${selectedIcons.includes(label) ? "selected" : ""} ${iconPositions[label] ? "free-position" : ""}`}
             key={label}
+            style={iconPositions[label] ? { left: iconPositions[label].x, top: iconPositions[label].y } : undefined}
+            onMouseDown={(event) => startIconDrag(event, label)}
             onClick={() => iconType === "trash" && handleRecycleClick()}
             onDoubleClick={() => id && openWindow(id)}
           >
