@@ -1939,3 +1939,81 @@ body.dragging {
 .boot-progress i {
   background: linear-gradient(90deg, #4d7892, #e3a760);
 }
+
+
+/* Darker Night Harbor pass */
+.window {
+  background: #10263a;
+}
+
+.titlebar {
+  background: linear-gradient(90deg, #061525 0%, #102f49 68%, #513d31 150%);
+}
+
+.menubar {
+  background: #10283d;
+  color: #b8c8d2;
+}
+
+.window-body {
+  background: rgba(3, 14, 24, 0.98);
+}
+
+.hero {
+  background:
+    linear-gradient(90deg, rgba(104, 140, 164, 0.03) 1px, transparent 1px),
+    linear-gradient(rgba(104, 140, 164, 0.025) 1px, transparent 1px),
+    radial-gradient(circle at 74% 42%, #102d43 0%, #071b2b 42%, #030d17 78%);
+  background-size: 20px 20px, 20px 20px, auto;
+}
+
+.project-card,
+.skill-grid span,
+.system-content dl div {
+  background: #061725;
+}
+
+.project-card:hover {
+  background: #0a2031;
+}
+
+.player-body {
+  background: linear-gradient(135deg, #142f46, #091d2e);
+}
+
+.start-menu {
+  background: #10293e;
+}
+
+.start-menu-head {
+  background: linear-gradient(90deg, #06192a, #173c58);
+}
+
+.taskbar {
+  background: linear-gradient(#102d44, #071b2b);
+}
+
+.start,
+.task {
+  background: #102e45;
+}
+
+.start:hover,
+.task:hover {
+  background: #1b435e;
+}
+
+.start.active,
+.task.active {
+  background: #061c2c;
+}
+
+.tray {
+  background: #0a2639;
+}
+
+.desktop {
+  background-image:
+    linear-gradient(rgba(2, 8, 16, 0.12), rgba(2, 8, 16, 0.2)),
+    url("/background.png");
+}
