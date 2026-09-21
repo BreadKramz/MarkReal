@@ -149,6 +149,7 @@ function App() {
   const [now, setNow] = useState(new Date());
   const [startMenuOpen, setStartMenuOpen] = useState(false);
   const [booting, setBooting] = useState(true);
+  const [showFullscreenPrompt, setShowFullscreenPrompt] = useState(false);
   const zIndex = useRef(20);
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -214,7 +215,10 @@ function App() {
 
   useEffect(() => {
     const clock = setInterval(() => setNow(new Date()), 1000);
-    const bootTimer = setTimeout(() => setBooting(false), 1500);
+    const bootTimer = setTimeout(() => {
+      setBooting(false);
+      setShowFullscreenPrompt(true);
+    }, 1500);
 
     const startMusic = async () => {
       const audio = audioRef.current;
@@ -490,7 +494,7 @@ function App() {
         </div>
       )}
 
-      <div className="desktop-glow" />
+      {showFullscreenPrompt && (\n        <div className="fullscreen-overlay">\n          <div className="fullscreen-dialog window">\n            <header className="titlebar"><span className="window-title"><i className="window-dot" />PortfolioOS Setup</span></header>\n            <div className="fullscreen-dialog-body">\n              <div className="fullscreen-icon">▣</div>\n              <div><b>For the full PortfolioOS experience</b><p>Would you like to view this site in fullscreen mode?</p>\n                <div className="fullscreen-actions">\n                  <button className="primary-action" onClick={async () => { try { await document.documentElement.requestFullscreen(); } catch {} setShowFullscreenPrompt(false); }}>Yes, Fullscreen</button>\n                  <button className="secondary-action" onClick={() => setShowFullscreenPrompt(false)}>No, Continue</button>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n      )}\n\n      <div className="desktop-glow" />
       <div className="moon" />
       <div className="stars">·　.　　·　　　.　·　　　.</div>
       <div className="city city-back" />
