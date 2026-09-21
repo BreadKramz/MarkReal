@@ -4609,3 +4609,61 @@ body.icon-dragging {
   background: #3a1817;
   color: #ff9e83;
 }
+
+
+/* Lock screen clock alignment refinement */
+.lock-clock {
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: .13em;
+  line-height: .88;
+  white-space: nowrap;
+}
+
+.lock-hours-minutes {
+  display: inline-block;
+  font-size: 1em;
+  letter-spacing: -.035em;
+}
+
+.lock-seconds {
+  display: inline-block;
+  min-width: 2ch;
+  margin: 0 0 .08em 0;
+  color: #f2bd79;
+  font-size: .42em;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: .02em;
+  text-align: left;
+  text-shadow: 0 1px 5px rgba(0,0,0,.85);
+  animation: lockSecondTickClean 360ms cubic-bezier(.22,.8,.25,1);
+}
+
+@keyframes lockSecondTickClean {
+  0% {
+    opacity: .45;
+    transform: translateY(-3px);
+  }
+  55% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: .92;
+  }
+}
+
+/* Recycle Bin restored shortcut controls */
+.recycle-bin-toolbar button {
+  display: inline-block;
+}
+
+.recycle-files button {
+  transition: background 120ms ease, border-color 120ms ease, transform 120ms ease;
+}
+
+.recycle-files button:hover {
+  transform: translateY(-1px);
+}
