@@ -222,17 +222,13 @@ function App() {
           </div>
         </div>
 
-        <div className="portrait-panel" aria-hidden="true">
+        <div className="portrait-panel">
           <div className="portrait-grid" />
-          <div className="pixel-avatar">
-            <div className="avatar-hair" />
-            <div className="avatar-face">
-              <i />
-              <i />
-              <b />
-            </div>
-            <div className="avatar-body" />
-          </div>
+          <img
+            className="profile-photo"
+            src="/profile.jpg"
+            alt="Mark Real"
+          />
           <span>MR // PROFILE</span>
         </div>
       </div>
