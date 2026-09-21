@@ -4834,3 +4834,52 @@ body.icon-dragging {
     font-size: .48em;
   }
 }
+
+
+/* Definitive lock clock layout: one clock string, one date line */
+.lock-time {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.lock-clock-row {
+  display: block;
+  line-height: 1;
+}
+
+.lock-clock-row .lock-clock {
+  display: block;
+  margin: 0;
+  color: #f4dfc1;
+  font-size: clamp(48px, 6.5vw, 72px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.045em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 4px 18px rgba(0,0,0,.48);
+}
+
+.lock-time .lock-date {
+  display: block;
+  margin: 0;
+  color: #d3e0e6;
+  font-size: clamp(12px, 1.2vw, 15px);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: .02em;
+  white-space: nowrap;
+  text-shadow: 0 2px 8px rgba(0,0,0,.72);
+}
+
+@media (max-width: 600px) {
+  .lock-clock-row .lock-clock {
+    font-size: clamp(40px, 12vw, 58px);
+  }
+
+  .lock-time {
+    gap: 10px;
+  }
+}
