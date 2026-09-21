@@ -316,7 +316,7 @@ function App() {
 
     about: (
       <div className="about-content">
-        <div className="terminal-label">C:\PORTFOLIO\ABOUT&gt;</div>
+        <div className="terminal-label">C:\\PORTFOLIO\\ABOUT&gt;</div>
         <h3>About me</h3>
         <p>
           I'm a Computer Science student focused on creating practical,
@@ -494,7 +494,48 @@ function App() {
         </div>
       )}
 
-      {showFullscreenPrompt && (\n        <div className="fullscreen-overlay">\n          <div className="fullscreen-dialog window">\n            <header className="titlebar"><span className="window-title"><i className="window-dot" />PortfolioOS Setup</span></header>\n            <div className="fullscreen-dialog-body">\n              <div className="fullscreen-icon">▣</div>\n              <div><b>For the full PortfolioOS experience</b><p>Would you like to view this site in fullscreen mode?</p>\n                <div className="fullscreen-actions">\n                  <button className="primary-action" onClick={async () => { try { await document.documentElement.requestFullscreen(); } catch {} setShowFullscreenPrompt(false); }}>Yes, Fullscreen</button>\n                  <button className="secondary-action" onClick={() => setShowFullscreenPrompt(false)}>No, Continue</button>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n      )}\n\n      <div className="desktop-glow" />
+      {showFullscreenPrompt && (
+        <div className="fullscreen-overlay">
+          <div className="fullscreen-dialog window">
+            <header className="titlebar">
+              <span className="window-title">
+                <i className="window-dot" />
+                PortfolioOS Setup
+              </span>
+            </header>
+            <div className="fullscreen-dialog-body">
+              <div className="fullscreen-icon">▣</div>
+              <div>
+                <b>For the full PortfolioOS experience</b>
+                <p>Would you like to view this site in fullscreen mode?</p>
+                <div className="fullscreen-actions">
+                  <button
+                    className="primary-action"
+                    onClick={async () => {
+                      try {
+                        await document.documentElement.requestFullscreen();
+                      } catch {
+                        // Fullscreen can be unavailable or blocked by the browser.
+                      }
+                      setShowFullscreenPrompt(false);
+                    }}
+                  >
+                    Yes, Fullscreen
+                  </button>
+                  <button
+                    className="secondary-action"
+                    onClick={() => setShowFullscreenPrompt(false)}
+                  >
+                    No, Continue
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="desktop-glow" />
       <div className="moon" />
       <div className="stars">·　.　　·　　　.　·　　　.</div>
       <div className="city city-back" />
