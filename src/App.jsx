@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
+// PortfolioOS stable build — pre-final-polish restore
+
 const definitions = {
   welcome: { title: "Welcome.exe", pos: { x: 185, y: 78 } },
   about: { title: "About_Me.exe", pos: { x: 225, y: 445 } },
