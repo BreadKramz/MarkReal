@@ -162,6 +162,7 @@ function App() {
   const [selectionBox, setSelectionBox] = useState(null);
   const selectionStart = useRef(null);
   const [contextMenu, setContextMenu] = useState(null);
+  const [hiddenIcons, setHiddenIcons] = useState([]);
   const [selectedIcons, setSelectedIcons] = useState([]);
   const desktopIconRefs = useRef({});
   const zIndex = useRef(20);
@@ -379,6 +380,24 @@ function App() {
     setSelectedIcons([]);
     selectionStart.current = { x: event.clientX, y: event.clientY };
     setSelectionBox({ x: event.clientX, y: event.clientY, width: 0, height: 0 });
+  };
+
+  const showIconContextMenu = (event, label) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setSelectionBox(null);
+    setSelectedIcons([label]);
+    setContextMenu({
+      x: Math.min(event.clientX, window.innerWidth - 220),
+      y: Math.min(event.clientY, window.innerHeight - 150),
+      iconLabel: label,
+    });
+  };
+
+  const deleteDesktopIcon = (label) => {
+    setHiddenIcons((current) => current.includes(label) ? current : [...current, label]);
+    setSelectedIcons([]);
+    setContextMenu(null);
   };
 
   const showDesktopContextMenu = (event) => {
@@ -911,6 +930,22 @@ function App() {
           onMouseDown={(event) => event.stopPropagation()}
           onContextMenu={(event) => event.preventDefault()}
         >
+          {contextMenu.iconLabel ? (
+            <>
+              <button onClick={() => {
+                const item = desktopItems.find(([, label]) => label === contextMenu.iconLabel);
+                if (item?.[2]) openWindow(item[2]);
+                setContextMenu(null);
+              }}>
+                <span>↗</span><div><b>Open</b><small>{contextMenu.iconLabel}</small></div>
+              </button>
+              <div className="context-divider" />
+              <button className="context-delete" onClick={() => deleteDesktopIcon(contextMenu.iconLabel)}>
+                <span>×</span><div><b>Delete shortcut</b><small>Remove from desktop</small></div>
+              </button>
+            </>
+          ) : (
+            <>
           <button onClick={() => { openWindow("welcome"); setContextMenu(null); }}>
             <span>▦</span><div><b>Open Portfolio</b><small>Welcome.exe</small></div>
           </button>
@@ -927,17 +962,20 @@ function App() {
           <button onClick={() => { setStartMenuOpen(true); setContextMenu(null); }}>
             <span>MR</span><div><b>Start Menu</b><small>All applications</small></div>
           </button>
+            </>
+          )}
         </div>
       )}
 
       <aside className="desktop-icons">
-        {desktopItems.map(([symbol, label, id, iconType]) => (
+        {desktopItems.filter(([, label]) => !hiddenIcons.includes(label)).map(([symbol, label, id, iconType]) => (
           <button
             ref={(element) => { desktopIconRefs.current[label] = element; }}
             className={`desktop-item ${selectedIcons.includes(label) ? "selected" : ""}`}
             key={label}
             onClick={() => iconType === "trash" && handleRecycleClick()}
             onDoubleClick={() => id && openWindow(id)}
+            onContextMenu={(event) => showIconContextMenu(event, label)}
           >
             <span className={`pixel-icon icon-${iconType}`}><i>{symbol}</i></span>
             <span className="icon-label">{label}</span>
