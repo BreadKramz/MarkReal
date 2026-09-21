@@ -2756,3 +2756,183 @@ body.dragging {
     bottom: 62px;
   }
 }
+
+
+/* PortfolioOS ambient desktop — make the workspace feel alive */
+.desktop {
+  isolation: isolate;
+}
+
+.desktop-glow {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 72% 22%, rgba(239, 179, 109, 0.08), transparent 18%),
+    radial-gradient(circle at 55% 62%, rgba(74, 139, 178, 0.07), transparent 30%);
+  animation: ambientGlow 9s ease-in-out infinite alternate;
+}
+
+.noise {
+  opacity: 0.16;
+}
+
+.desktop-brand,
+.desktop-icons,
+.app-window,
+.player,
+.note,
+.wall-copy,
+.taskbar {
+  z-index: 2;
+}
+
+.desktop::before {
+  z-index: 1;
+}
+
+.desktop::after {
+  z-index: 1;
+}
+
+/* subtle drifting light specks over the city */
+.desktop-glow::before,
+.desktop-glow::after {
+  content: "";
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(239, 190, 126, 0.8);
+  box-shadow:
+    90px 80px rgba(126, 176, 205, 0.45),
+    230px 170px rgba(239, 190, 126, 0.55),
+    410px 95px rgba(126, 176, 205, 0.35),
+    580px 250px rgba(239, 190, 126, 0.4),
+    760px 120px rgba(126, 176, 205, 0.42),
+    930px 320px rgba(239, 190, 126, 0.35),
+    1120px 190px rgba(126, 176, 205, 0.38);
+  opacity: 0.42;
+  animation: cityParticles 15s linear infinite;
+}
+
+.desktop-glow::after {
+  top: 31%;
+  left: 8%;
+  opacity: 0.24;
+  transform: scale(0.7);
+  animation-duration: 22s;
+  animation-direction: reverse;
+}
+
+/* a soft futuristic horizon line behind the windows */
+.wall-copy::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 16px);
+  width: 210px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(239,179,109,.5));
+  box-shadow: 0 -7px 18px rgba(239,179,109,.1);
+}
+
+.wall-copy {
+  text-shadow: 0 3px 14px rgba(0,0,0,.8);
+  animation: wallCopyFloat 6s ease-in-out infinite alternate;
+}
+
+/* more presence for the main welcome window */
+.window-welcome {
+  box-shadow:
+    0 0 0 1px rgba(0, 5, 10, 0.92),
+    0 16px 48px rgba(0, 0, 0, 0.58),
+    0 0 55px rgba(52, 111, 145, 0.12);
+}
+
+.window-welcome .hero::after {
+  content: "SYSTEM READY  •  BUILD 2026";
+  position: absolute;
+  right: 18px;
+  bottom: 13px;
+  color: rgba(143, 176, 195, 0.34);
+  font-size: 6px;
+  letter-spacing: .16em;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  right: -80px;
+  top: -110px;
+  border: 1px solid rgba(107, 158, 188, 0.08);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 24px rgba(107, 158, 188, 0.025),
+    0 0 0 54px rgba(107, 158, 188, 0.018);
+  pointer-events: none;
+  animation: radarPulse 7s ease-in-out infinite;
+}
+
+/* icons breathe slightly instead of feeling pasted onto the wallpaper */
+.desktop-item:nth-child(odd) .pixel-icon {
+  animation: iconIdle 5.5s ease-in-out infinite;
+}
+
+.desktop-item:nth-child(even) .pixel-icon {
+  animation: iconIdle 6.5s ease-in-out infinite reverse;
+}
+
+.desktop-item:hover .pixel-icon {
+  animation: none;
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,.12),
+    inset -1px -1px 0 rgba(0,0,0,.5),
+    0 7px 18px rgba(0,0,0,.4),
+    0 0 18px rgba(239,179,109,.14);
+}
+
+@keyframes ambientGlow {
+  from { opacity: .58; transform: scale(1); }
+  to { opacity: 1; transform: scale(1.025); }
+}
+
+@keyframes cityParticles {
+  from { transform: translate3d(0, 18px, 0); }
+  50% { opacity: .65; }
+  to { transform: translate3d(24px, -32px, 0); }
+}
+
+@keyframes wallCopyFloat {
+  from { transform: translateY(0); opacity: .82; }
+  to { transform: translateY(-5px); opacity: 1; }
+}
+
+@keyframes radarPulse {
+  50% { transform: scale(1.05); opacity: .55; }
+}
+
+@keyframes iconIdle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desktop-glow,
+  .desktop-glow::before,
+  .desktop-glow::after,
+  .wall-copy,
+  .hero::before,
+  .desktop-item .pixel-icon {
+    animation: none !important;
+  }
+}
