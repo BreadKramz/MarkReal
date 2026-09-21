@@ -4883,3 +4883,152 @@ body.icon-dragging {
     gap: 10px;
   }
 }
+
+
+/* Interactive Windows-style clock/calendar tray */
+.tray {
+  position: relative;
+}
+
+.tray button {
+  font: inherit;
+}
+
+.tray-icons,
+.tray-clock {
+  border: 0;
+  color: inherit;
+  background: transparent;
+}
+
+.tray-icons {
+  padding: 7px 8px;
+  cursor: default;
+}
+
+.tray-clock {
+  display: grid;
+  min-width: 84px;
+  padding: 5px 9px;
+  border: 1px solid transparent;
+  text-align: right;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.tray-clock:hover,
+.tray-clock.active {
+  border-color: rgba(137,188,214,.22);
+  background: rgba(132,183,207,.12);
+}
+
+.tray-clock b,
+.tray-clock small {
+  pointer-events: none;
+}
+
+.tray-calendar {
+  position: fixed;
+  right: 10px;
+  bottom: 58px;
+  z-index: 14000;
+  width: min(340px, calc(100vw - 20px));
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(122,169,191,.5);
+  background: rgba(8,18,24,.96);
+  box-shadow: 0 18px 55px rgba(0,0,0,.62), inset 0 0 0 1px rgba(255,255,255,.025);
+  backdrop-filter: blur(16px);
+  animation: calendarPop 180ms cubic-bezier(.2,.8,.2,1);
+}
+
+.tray-calendar-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 17px 18px 15px;
+  border-bottom: 1px solid rgba(120,166,187,.2);
+  background: linear-gradient(180deg, rgba(45,91,111,.24), rgba(11,27,34,.08));
+}
+
+.tray-calendar-head > div {
+  display: grid;
+  gap: 4px;
+}
+
+.tray-calendar-head small {
+  color: #8fb0be;
+  font-size: 8px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.tray-calendar-head b {
+  color: #e5edf0;
+  font-size: 13px;
+}
+
+.tray-calendar-head > span {
+  color: #efb36d;
+  font-size: 17px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.calendar-month {
+  padding: 15px 16px 17px;
+}
+
+.calendar-weekdays,
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-weekdays {
+  margin-bottom: 7px;
+}
+
+.calendar-weekdays span {
+  color: #668a99;
+  font-size: 7px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.calendar-days span {
+  display: grid;
+  height: 34px;
+  place-items: center;
+  border: 1px solid transparent;
+  color: #cbd9df;
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+}
+
+.calendar-days span:not(.calendar-blank):hover {
+  border-color: rgba(126,188,216,.28);
+  background: rgba(88,148,177,.12);
+}
+
+.calendar-days span.today {
+  border-color: rgba(239,179,109,.7);
+  background: rgba(239,179,109,.16);
+  color: #ffd6a5;
+  box-shadow: inset 0 0 0 1px rgba(239,179,109,.12);
+}
+
+.tray-calendar-foot {
+  padding: 9px 16px;
+  border-top: 1px solid rgba(120,166,187,.16);
+  color: #557581;
+  font-size: 7px;
+  letter-spacing: .1em;
+}
+
+@keyframes calendarPop {
+  from { opacity: 0; transform: translateY(10px) scale(.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
