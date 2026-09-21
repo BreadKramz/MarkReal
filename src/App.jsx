@@ -150,7 +150,7 @@ function App() {
   const [now, setNow] = useState(new Date());
   const [startMenuOpen, setStartMenuOpen] = useState(false);
   const [booting, setBooting] = useState(true);
-  const [showFullscreenPrompt, setShowFullscreenPrompt] = useState(false);
+  const [showFullscreenPrompt, setShowFullscreenPrompt] = useState(true);
   const [locked, setLocked] = useState(true);
   const [lockPassword, setLockPassword] = useState("");
   const [lockError, setLockError] = useState(false);
@@ -626,7 +626,7 @@ function App() {
             {lockError && <span className="lock-error">Incorrect password. Try again.</span>}
             <div className="lock-note"><span>NOTE.TXT</span>Password hint: <b>Code4Life</b></div>
           </form>
-          <div className="lock-fullscreen-alert">
+          {showFullscreenPrompt && <div className="lock-fullscreen-alert">
             <div className="lock-fullscreen-alert-head">
               <span><i /> PortfolioOS Display</span>
               <b>×</b>
@@ -645,15 +645,16 @@ function App() {
                       } catch {
                         // Fullscreen may be unavailable or blocked by the browser.
                       }
+                      setShowFullscreenPrompt(false);
                     }}
                   >
                     Yes, Fullscreen
                   </button>
-                  <button type="button">No, Continue</button>
+                  <button type="button" onClick={() => setShowFullscreenPrompt(false)}>No, Continue</button>
                 </div>
               </div>
             </div>
-          </div>
+          </div>}
           <div className="lock-footer">PORTFOLIO OS 2.5 · SECURE SESSION</div>
         </div>
       )}
