@@ -804,15 +804,17 @@ function App() {
       {!booting && locked && (
         <div className="lockscreen">
           <div className="lock-time">
-            <b className="lock-clock">
-              <span className="lock-hours-minutes">
+            <div className="lock-clock-row">
+              <b className="lock-clock">
                 {now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-              </span>
+              </b>
               <span className="lock-seconds" key={now.getSeconds()}>
                 {String(now.getSeconds()).padStart(2, "0")}
               </span>
-            </b>
-            <span>{now.toLocaleDateString([], { weekday: "long", month: "long", day: "numeric" })}</span>
+            </div>
+            <span className="lock-date">
+              {now.toLocaleDateString([], { weekday: "long", month: "long", day: "numeric" })}
+            </span>
           </div>
           <form className="lock-panel" onSubmit={unlockPortfolio}>
             <div className="lock-avatar">MR</div>
