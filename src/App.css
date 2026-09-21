@@ -2017,3 +2017,61 @@ body.dragging {
     linear-gradient(rgba(2, 8, 16, 0.12), rgba(2, 8, 16, 0.2)),
     url("/background.png");
 }
+
+
+/* PortfolioOS command prompt */
+.window-cmd {
+  width: 560px;
+  height: 300px;
+}
+
+.window-cmd .menubar {
+  display: none;
+}
+
+.window-cmd .window-body {
+  height: calc(100% - 36px);
+  background: rgba(2, 10, 18, 0.98);
+}
+
+.cmd-content {
+  min-height: 100%;
+  padding: 14px 16px;
+  color: #c9d8df;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+.cmd-history p {
+  margin: 0 0 4px;
+  white-space: pre-wrap;
+}
+
+.cmd-line {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  color: #e3a760;
+}
+
+.cmd-line label {
+  flex: 0 0 auto;
+}
+
+.cmd-line input {
+  flex: 1;
+  min-width: 0;
+  padding: 0 4px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #f0e8dc;
+  font: inherit;
+  caret-color: transparent;
+}
+
+.cmd-cursor {
+  color: #e3a760;
+  animation: blink 1s steps(1) infinite;
+}
