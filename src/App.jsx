@@ -165,6 +165,7 @@ function App() {
   const [selectedIcons, setSelectedIcons] = useState([]);
   const [iconPositions, setIconPositions] = useState({});
   const [recycledIcons, setRecycledIcons] = useState([]);
+  const [recycleDrop, setRecycleDrop] = useState(null);
   const iconDrag = useRef(null);
   const desktopIconRefs = useRef({});
   const zIndex = useRef(20);
@@ -409,7 +410,7 @@ function App() {
       startY: event.clientY,
       lastX: event.clientX,
       lastY: event.clientY,
-      labels: movingLabels.filter((name) => name !== "Recycle Bin"),
+      labels: movingLabels,
       origins,
       moved: false,
     };
@@ -482,6 +483,13 @@ function App() {
         });
         return next;
       });
+
+      const recycleElement = desktopIconRefs.current["Recycle Bin"];
+      const recycleRect = recycleElement?.getBoundingClientRect();
+      const overRecycle = labels.some((label) => label !== "Recycle Bin") && recycleRect &&
+        event.clientX >= recycleRect.left && event.clientX <= recycleRect.right &&
+        event.clientY >= recycleRect.top && event.clientY <= recycleRect.bottom;
+      recycleElement?.classList.toggle("drop-target", Boolean(overRecycle));
     };
 
     const stopSelection = (event) => {
@@ -495,9 +503,14 @@ function App() {
           event.clientX <= recycleRect.right && event.clientY >= recycleRect.top &&
           event.clientY <= recycleRect.bottom;
 
-        if (droppedOnRecycle) {
-          setRecycledIcons((current) => [...new Set([...current, ...drag.labels])]);
-          setSelectedIcons([]);
+        const recyclableLabels = drag.labels.filter((label) => label !== "Recycle Bin");
+        if (droppedOnRecycle && recyclableLabels.length) {
+          setRecycleDrop({ labels: recyclableLabels, x: event.clientX, y: event.clientY });
+          window.setTimeout(() => {
+            setRecycledIcons((current) => [...new Set([...current, ...recyclableLabels])]);
+            setSelectedIcons([]);
+            setRecycleDrop(null);
+          }, 420);
         } else {
           const gridX = 110;
           const gridY = 104;
@@ -508,21 +521,58 @@ function App() {
 
           setIconPositions((current) => {
             const next = { ...current };
+            const occupied = new Set();
+
+            desktopItems
+              .map(([, label]) => label)
+              .filter((label) => !recycledIcons.includes(label) && !labels.includes(label))
+              .forEach((label) => {
+                const element = desktopIconRefs.current[label];
+                if (!element) return;
+                const rect = element.getBoundingClientRect();
+                const gx = 16 + Math.round((rect.left - 16) / gridX) * gridX;
+                const gy = 18 + Math.round((rect.top - 18) / gridY) * gridY;
+                occupied.add(`${gx}:${gy}`);
+              });
+
+            const findFreeSlot = (rawX, rawY) => {
+              const maxX = Math.max(16, window.innerWidth - 116);
+              const maxY = Math.max(18, window.innerHeight - 160);
+              const baseCol = Math.max(0, Math.round((rawX - 16) / gridX));
+              const baseRow = Math.max(0, Math.round((rawY - 18) / gridY));
+              const maxCols = Math.max(1, Math.floor((maxX - 16) / gridX) + 1);
+              const maxRows = Math.max(1, Math.floor((maxY - 18) / gridY) + 1);
+
+              for (let radius = 0; radius < Math.max(maxCols, maxRows); radius += 1) {
+                for (let rowOffset = -radius; rowOffset <= radius; rowOffset += 1) {
+                  for (let colOffset = -radius; colOffset <= radius; colOffset += 1) {
+                    if (Math.max(Math.abs(rowOffset), Math.abs(colOffset)) !== radius) continue;
+                    const col = Math.min(maxCols - 1, Math.max(0, baseCol + colOffset));
+                    const row = Math.min(maxRows - 1, Math.max(0, baseRow + rowOffset));
+                    const x = 16 + col * gridX;
+                    const y = 18 + row * gridY;
+                    const key = `${x}:${y}`;
+                    if (!occupied.has(key)) {
+                      occupied.add(key);
+                      return { x, y };
+                    }
+                  }
+                }
+              }
+              return { x: 16, y: 18 };
+            };
+
             labels.forEach((label) => {
               const origin = origins[label];
               if (!origin) return;
-              const rawX = origin.x + dx;
-              const rawY = origin.y + dy;
-              next[label] = {
-                x: Math.max(16, Math.min(window.innerWidth - 116, 16 + Math.round((rawX - 16) / gridX) * gridX)),
-                y: Math.max(18, Math.min(window.innerHeight - 160, 18 + Math.round((rawY - 18) / gridY) * gridY)),
-              };
+              next[label] = findFreeSlot(origin.x + dx, origin.y + dy);
             });
             return next;
           });
         }
       }
 
+      desktopIconRefs.current["Recycle Bin"]?.classList.remove("drop-target");
       iconDrag.current = null;
       document.body.classList.remove("icon-dragging");
       window.setTimeout(() => setSelectionBox(null), 90);
@@ -1024,6 +1074,13 @@ function App() {
             height: selectionBox.height,
           }}
         />
+      )}
+
+      {recycleDrop && (
+        <div className="recycle-drop-fx" style={{ left: recycleDrop.x, top: recycleDrop.y }}>
+          <span>♲</span>
+          <b>{recycleDrop.labels.length > 1 ? `${recycleDrop.labels.length} ITEMS` : recycleDrop.labels[0]}</b>
+        </div>
       )}
 
       {contextMenu && (
