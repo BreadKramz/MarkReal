@@ -1421,3 +1421,41 @@ body.dragging {
     display: none;
   }
 }
+
+
+/* Functional now_playing.exe controls */
+.track {
+  display: block;
+  width: 100%;
+  padding: 0;
+  cursor: pointer;
+}
+
+.track i {
+  transition: width 0.15s linear;
+}
+
+.player-control {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #37423c;
+  font: inherit;
+  font-size: 7px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.player-control:hover {
+  color: #101916;
+}
+
+.album-art.playing {
+  animation: playerPulse 2.4s steps(2) infinite;
+}
+
+@keyframes playerPulse {
+  50% {
+    filter: brightness(1.18);
+  }
+}
