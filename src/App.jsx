@@ -1048,9 +1048,9 @@ function App() {
         <div>
           <small>REMINDER / 001</small>
           <p>
-            Good ideas start
+            Don't press the Recycle Bin
             <br />
-            with a curious mind.
+            too many times.
           </p>
           <b>— MARK</b>
         </div>
