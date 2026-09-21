@@ -154,6 +154,7 @@ function App() {
   const [locked, setLocked] = useState(true);
   const [lockPassword, setLockPassword] = useState("");
   const [lockError, setLockError] = useState(false);
+  const [showWelcomeToast, setShowWelcomeToast] = useState(false);
   const zIndex = useRef(20);
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -177,6 +178,8 @@ function App() {
         }
       }
       setLocked(false);
+      setShowWelcomeToast(true);
+      window.setTimeout(() => setShowWelcomeToast(false), 4200);
       setLockError(false);
       setLockPassword("");
       return;
@@ -634,6 +637,22 @@ function App() {
       )}
 
       <div className="desktop-glow" />
+      {!booting && !locked && <div className="desktop-aurora" />}
+      {!booting && !locked && (
+        <div className="system-widget">
+          <div className="system-widget-head"><span /> PORTFOLIO NETWORK</div>
+          <div className="system-widget-row"><b>STATUS</b><span>ONLINE</span></div>
+          <div className="system-widget-row"><b>SESSION</b><span>MARK_REAL</span></div>
+          <div className="system-widget-meter"><i /></div>
+          <small>NODE 04 · DUMAGUETE</small>
+        </div>
+      )}
+      {showWelcomeToast && (
+        <div className="welcome-toast">
+          <span className="welcome-toast-icon">✓</span>
+          <div><b>Welcome back, Mark.</b><small>PortfolioOS workspace is ready.</small></div>
+        </div>
+      )}
       <div className="moon" />
       <div className="stars">·　.　　·　　　.　·　　　.</div>
       <div className="city city-back" />
