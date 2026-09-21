@@ -186,6 +186,19 @@ function App() {
     const clock = setInterval(() => setNow(new Date()), 1000);
     const bootTimer = setTimeout(() => setBooting(false), 1500);
 
+    const startMusic = async () => {
+      const audio = audioRef.current;
+      if (!audio) return;
+
+      try {
+        await audio.play();
+      } catch {
+        // Browsers may block autoplay with sound until the visitor interacts.
+      }
+    };
+
+    startMusic();
+
     return () => {
       clearInterval(clock);
       clearTimeout(bootTimer);
