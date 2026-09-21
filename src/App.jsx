@@ -392,17 +392,17 @@ function App() {
           </div>
         </div>
         <div className="timeline-item">
-          <span>NOW</span>
+          <span>2023–2026</span>
           <div>
-            <b>Computer Science Student</b>
-            <p>Academic and personal software development projects.</p>
+            <b>Negros Oriental State University</b>
+            <p>4th Year · Bachelor of Science in Computer Science</p>
           </div>
         </div>
         <div className="timeline-item">
-          <span>OJT</span>
+          <span>2026</span>
           <div>
-            <b>On-the-Job Training</b>
-            <p>Professional workplace and hands-on technical experience.</p>
+            <b>Government Service Insurance System (GSIS)</b>
+            <p>On-the-Job Training · Current</p>
           </div>
         </div>
       </div>
