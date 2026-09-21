@@ -460,6 +460,7 @@ function App() {
           <span className="cmd-cursor">_</span>
         </form>
       </div>
+    ),
   };
 
   return (
