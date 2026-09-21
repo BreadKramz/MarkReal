@@ -148,6 +148,39 @@ function App() {
   const [startMenuOpen, setStartMenuOpen] = useState(false);
   const [booting, setBooting] = useState(true);
   const zIndex = useRef(20);
+  const audioRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  const formatTime = (seconds) => {
+    if (!Number.isFinite(seconds)) return "00:00";
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
+  };
+
+  const toggleMusic = async () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (audio.paused) {
+      try {
+        await audio.play();
+      } catch {
+        setIsPlaying(false);
+      }
+    } else {
+      audio.pause();
+    }
+  };
+
+  const seekMusic = (event) => {
+    const audio = audioRef.current;
+    if (!audio || !duration) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const ratio = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+    audio.currentTime = ratio * duration;
+  };
 
   useEffect(() => {
     const clock = setInterval(() => setNow(new Date()), 1000);
@@ -432,31 +465,46 @@ function App() {
       ))}
 
       <section className="player window utility-window">
+        <audio
+          ref={audioRef}
+          src="/music/lofi.mp3"
+          loop
+          preload="metadata"
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)}
+          onLoadedMetadata={(event) => setDuration(event.currentTarget.duration)}
+          onDurationChange={(event) => setDuration(event.currentTarget.duration)}
+        />
         <header className="titlebar">
           <span className="window-title">
             <i className="window-dot" />
             now_playing.exe
           </span>
           <div className="window-actions">
-            <button>×</button>
+            <button aria-label={isPlaying ? "Pause music" : "Play music"} onClick={toggleMusic}>
+              {isPlaying ? "Ⅱ" : "▶"}
+            </button>
           </div>
         </header>
         <div className="player-body">
-          <div className="album-art">
+          <div className={`album-art ${isPlaying ? "playing" : ""}`}>
             <span>LO</span>
             <span>FI</span>
           </div>
           <div className="player-info">
-            <small>NOW PLAYING</small>
-            <b>late night coding</b>
+            <small>{isPlaying ? "NOW PLAYING" : "READY TO PLAY"}</small>
+            <b>lofi.mp3</b>
             <span>chill.exe</span>
-            <div className="track">
-              <i />
-            </div>
+            <button className="track" type="button" aria-label="Seek through track" onClick={seekMusic}>
+              <i style={{ width: duration ? `${(currentTime / duration) * 100}%` : "0%" }} />
+            </button>
             <div className="player-bottom">
-              <span>02:17</span>
-              <span>◀　▶　▶|</span>
-              <span>03:45</span>
+              <span>{formatTime(currentTime)}</span>
+              <button className="player-control" type="button" onClick={toggleMusic}>
+                {isPlaying ? "❚❚ PAUSE" : "▶ PLAY"}
+              </button>
+              <span>{formatTime(duration)}</span>
             </div>
           </div>
         </div>
