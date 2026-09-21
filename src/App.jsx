@@ -158,8 +158,8 @@ function App() {
   const zIndex = useRef(20);
   const utilityDrag = useRef(null);
   const [utilityPositions, setUtilityPositions] = useState({
-    player: { x: null, y: 105 },
-    note: { x: null, y: 315 },
+    player: { x: null, y: 135 },
+    note: { x: null, y: 355 },
   });
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
