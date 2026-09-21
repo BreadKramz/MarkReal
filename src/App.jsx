@@ -12,6 +12,7 @@ const definitions = {
   contact: { title: "Contact.exe", pos: { x: 475, y: 170 } },
   system: { title: "System_Info.exe", pos: { x: 785, y: 465 } },
   cmd: { title: "Command_Prompt.exe", pos: { x: 480, y: 280 } },
+  recycle: { title: "Recycle_Bin.exe", pos: { x: 520, y: 210 } },
 };
 
 const desktopItems = [
@@ -22,7 +23,7 @@ const desktopItems = [
   ["▥", "Experience", "experience", "document"],
   ["✉", "Contact", "contact", "mail"],
   [">_", "Command Prompt", "cmd", "terminal"],
-  ["♲", "Recycle Bin", null, "trash"],
+  ["♲", "Recycle Bin", "recycle", "trash"],
 ];
 
 function RetroWindow({
@@ -163,6 +164,7 @@ function App() {
   const [contextMenu, setContextMenu] = useState(null);
   const [selectedIcons, setSelectedIcons] = useState([]);
   const [iconPositions, setIconPositions] = useState({});
+  const [recycledIcons, setRecycledIcons] = useState([]);
   const iconDrag = useRef(null);
   const desktopIconRefs = useRef({});
   const zIndex = useRef(20);
@@ -405,9 +407,13 @@ function App() {
     iconDrag.current = {
       startX: event.clientX,
       startY: event.clientY,
-      labels: movingLabels,
+      lastX: event.clientX,
+      lastY: event.clientY,
+      labels: movingLabels.filter((name) => name !== "Recycle Bin"),
       origins,
+      moved: false,
     };
+    document.body.classList.add("icon-dragging");
   };
 
   const showDesktopContextMenu = (event) => {
@@ -450,29 +456,75 @@ function App() {
     };
 
     const moveIcons = (event) => {
-      if (!iconDrag.current) return;
-      const dx = event.clientX - iconDrag.current.startX;
-      const dy = event.clientY - iconDrag.current.startY;
+      const drag = iconDrag.current;
+      if (!drag || !drag.labels.length) return;
+
+      drag.lastX = event.clientX;
+      drag.lastY = event.clientY;
+      if (Math.abs(event.clientX - drag.startX) > 3 || Math.abs(event.clientY - drag.startY) > 3) {
+        drag.moved = true;
+      }
+
+      const dx = event.clientX - drag.startX;
+      const dy = event.clientY - drag.startY;
+      const labels = [...drag.labels];
+      const origins = { ...drag.origins };
+
       setIconPositions((current) => {
         const next = { ...current };
-        iconDrag.current.labels.forEach((label) => {
-          const origin = iconDrag.current.origins[label];
+        labels.forEach((label) => {
+          const origin = origins[label];
           if (!origin) return;
-          const element = desktopIconRefs.current[label];
-          const width = element?.offsetWidth || 100;
-          const height = element?.offsetHeight || 92;
           next[label] = {
-            x: Math.max(0, Math.min(window.innerWidth - width, origin.x + dx)),
-            y: Math.max(0, Math.min(window.innerHeight - 58 - height, origin.y + dy)),
+            x: Math.max(16, Math.min(window.innerWidth - 116, origin.x + dx)),
+            y: Math.max(18, Math.min(window.innerHeight - 160, origin.y + dy)),
           };
         });
         return next;
       });
     };
 
-    const stopSelection = () => {
+    const stopSelection = (event) => {
       selectionStart.current = null;
+      const drag = iconDrag.current;
+
+      if (drag?.moved && drag.labels.length) {
+        const recycleElement = desktopIconRefs.current["Recycle Bin"];
+        const recycleRect = recycleElement?.getBoundingClientRect();
+        const droppedOnRecycle = recycleRect && event.clientX >= recycleRect.left &&
+          event.clientX <= recycleRect.right && event.clientY >= recycleRect.top &&
+          event.clientY <= recycleRect.bottom;
+
+        if (droppedOnRecycle) {
+          setRecycledIcons((current) => [...new Set([...current, ...drag.labels])]);
+          setSelectedIcons([]);
+        } else {
+          const gridX = 110;
+          const gridY = 104;
+          const labels = [...drag.labels];
+          const origins = { ...drag.origins };
+          const dx = event.clientX - drag.startX;
+          const dy = event.clientY - drag.startY;
+
+          setIconPositions((current) => {
+            const next = { ...current };
+            labels.forEach((label) => {
+              const origin = origins[label];
+              if (!origin) return;
+              const rawX = origin.x + dx;
+              const rawY = origin.y + dy;
+              next[label] = {
+                x: Math.max(16, Math.min(window.innerWidth - 116, 16 + Math.round((rawX - 16) / gridX) * gridX)),
+                y: Math.max(18, Math.min(window.innerHeight - 160, 18 + Math.round((rawY - 18) / gridY) * gridY)),
+              };
+            });
+            return next;
+          });
+        }
+      }
+
       iconDrag.current = null;
+      document.body.classList.remove("icon-dragging");
       window.setTimeout(() => setSelectionBox(null), 90);
     };
 
@@ -485,6 +537,17 @@ function App() {
       window.removeEventListener("mouseup", stopSelection);
     };
   }, []);
+
+  const restoreIcon = (label) => {
+    setRecycledIcons((current) => current.filter((item) => item !== label));
+    setIconPositions((current) => {
+      const next = { ...current };
+      delete next[label];
+      return next;
+    });
+  };
+
+  const emptyRecycleBin = () => setRecycledIcons([]);
 
   const windowContent = {
     welcome: (
@@ -738,6 +801,31 @@ function App() {
       </div>
     ),
 
+    recycle: (
+      <div className="recycle-bin-content">
+        <div className="recycle-bin-toolbar">
+          <b>RECYCLE BIN</b>
+          <button type="button" onClick={emptyRecycleBin} disabled={!recycledIcons.length}>Empty Bin</button>
+        </div>
+        {recycledIcons.length === 0 ? (
+          <div className="recycle-empty"><span>♲</span><p>Recycle Bin is empty.</p><small>Drag desktop icons onto the bin to store them here.</small></div>
+        ) : (
+          <div className="recycle-files">
+            {recycledIcons.map((label) => {
+              const item = desktopItems.find(([, name]) => name === label);
+              return (
+                <button key={label} type="button" onDoubleClick={() => restoreIcon(label)} title="Double-click to restore">
+                  <span>{item?.[0] || "□"}</span>
+                  <b>{label}</b>
+                  <small>Double-click to restore</small>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    ),
+
     cmd: (
       <div className="cmd-content">
         <div className="cmd-history">
@@ -965,7 +1053,7 @@ function App() {
       )}
 
       <aside className="desktop-icons">
-        {desktopItems.map(([symbol, label, id, iconType]) => (
+        {desktopItems.filter(([, label]) => !recycledIcons.includes(label)).map(([symbol, label, id, iconType]) => (
           <button
             ref={(element) => { desktopIconRefs.current[label] = element; }}
             className={`desktop-item ${selectedIcons.includes(label) ? "selected" : ""} ${iconPositions[label] ? "free-position" : ""}`}
