@@ -9,6 +9,7 @@ const definitions = {
   experience: { title: "Experience.exe", pos: { x: 355, y: 245 } },
   contact: { title: "Contact.exe", pos: { x: 475, y: 170 } },
   system: { title: "System_Info.exe", pos: { x: 785, y: 465 } },
+  cmd: { title: "Command_Prompt.exe", pos: { x: 480, y: 280 } },
 };
 
 const desktopItems = [
@@ -18,6 +19,7 @@ const desktopItems = [
   ["◆", "Skills", "skills"],
   ["▤", "Experience", "experience"],
   ["✉", "Contact", "contact"],
+  [">_", "Command Prompt", "cmd"],
   ["♜", "Recycle Bin", null],
 ];
 
@@ -152,6 +154,27 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [command, setCommand] = useState("");
+  const [commandHistory, setCommandHistory] = useState([
+    "PortfolioOS Command Prompt [Version 2.0]",
+    "Type help to see available commands.",
+  ]);
+
+  const runCommand = (event) => {
+    event.preventDefault();
+    const input = command.trim();
+    if (!input) return;
+
+    const cmd = input.toLowerCase();
+    let output = "";
+    if (cmd === "help") output = "Commands: help, about, projects";
+    else if (cmd === "about") output = "Mark Real - Computer Science student and developer.";
+    else if (cmd === "projects") output = "Projects: Church Management System | PortfolioOS";
+    else output = input + " is not recognized. Type help.";
+
+    setCommandHistory((history) => history.concat(["C:\\PORTFOLIO> " + input, output]));
+    setCommand("");
+  };
 
   const formatTime = (seconds) => {
     if (!Number.isFinite(seconds)) return "00:00";
@@ -416,6 +439,27 @@ function App() {
         </dl>
       </div>
     ),
+
+    cmd: (
+      <div className="cmd-content">
+        <div className="cmd-history">
+          {commandHistory.map((line, index) => (
+            <p key={index}>{line}</p>
+          ))}
+        </div>
+        <form className="cmd-line" onSubmit={runCommand}>
+          <label htmlFor="portfolio-command">C:\\PORTFOLIO&gt;</label>
+          <input
+            id="portfolio-command"
+            value={command}
+            onChange={(event) => setCommand(event.target.value)}
+            autoComplete="off"
+            spellCheck="false"
+            aria-label="Portfolio command"
+          />
+          <span className="cmd-cursor">_</span>
+        </form>
+      </div>
   };
 
   return (
