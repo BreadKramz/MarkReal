@@ -181,6 +181,31 @@ function App() {
     "Type help to see available commands.",
   ]);
 
+  const restartPortfolio = () => {
+    setStartMenuOpen(false);
+    setContextMenu(null);
+    setSelectedIcons([]);
+    setSelectionBox(null);
+    setLockPassword("");
+    setLockError(false);
+    setShowWelcomeToast(false);
+    setShowFullscreenPrompt(true);
+    setLocked(true);
+    setBooting(true);
+
+    const audio = audioRef.current;
+    if (audio) {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+    setIsPlaying(false);
+
+    window.setTimeout(() => {
+      setNow(new Date());
+      setBooting(false);
+    }, 1500);
+  };
+
   const unlockPortfolio = async (event) => {
     event.preventDefault();
     if (lockPassword === "Code4Life") {
@@ -1164,7 +1189,7 @@ function App() {
             ))}
           </div>
           <div className="start-footer">
-            <button onClick={() => setBooting(true)}>↻ Restart</button>
+            <button onClick={restartPortfolio}>↻ Restart</button>
           </div>
         </div>
       )}
