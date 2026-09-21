@@ -6,6 +6,7 @@ const definitions = {
   about: { title: "About_Me.exe", pos: { x: 225, y: 445 } },
   projects: { title: "Projects.exe", pos: { x: 320, y: 150 } },
   cms: { title: "Church_Management_System.exe", pos: { x: 210, y: 95 } },
+  cso: { title: "Computer_Science_Organization.exe", pos: { x: 245, y: 115 } },
   skills: { title: "Skills.exe", pos: { x: 400, y: 190 } },
   experience: { title: "Experience.exe", pos: { x: 355, y: 245 } },
   contact: { title: "Contact.exe", pos: { x: 475, y: 170 } },
@@ -209,7 +210,7 @@ function App() {
     let output = "";
     if (cmd === "help") output = "Commands: help, about, projects, cls";
     else if (cmd === "about") output = "Mark Real - Computer Science student and developer.";
-    else if (cmd === "projects") output = "Projects: Church Management System | PortfolioOS";
+    else if (cmd === "projects") output = "Projects: Church Management System | Computer Science Organization | PortfolioOS";
     else output = input + " is not recognized. Type help.";
 
     setCommandHistory((history) => history.concat(["C:\\PORTFOLIO> " + input, output]));
@@ -428,8 +429,18 @@ function App() {
           </div>
         </article>
 
-        <article className="project-card">
+        <article className="project-card project-card-launch" onDoubleClick={() => openWindow("cso")}>
           <div className="project-number">02</div>
+          <div>
+            <h4>Computer Science Organization</h4>
+            <p>A deployed web project for a Computer Science organization.</p>
+            <small>WEB APPLICATION / VERCEL</small>
+            <button className="project-launch" type="button" onClick={() => openWindow("cso")}>Launch Website.exe</button>
+          </div>
+        </article>
+
+        <article className="project-card">
+          <div className="project-number">03</div>
           <div>
             <h4>PortfolioOS</h4>
             <p>An interactive retro-desktop portfolio built in React.</p>
@@ -467,6 +478,38 @@ function App() {
         </div>
         <div className="cms-browser-footer">
           If the embedded preview is blocked, use ↗ Open to launch the live system.
+        </div>
+      </div>
+    ),
+
+    cso: (
+      <div className="cms-browser">
+        <div className="cms-browser-bar">
+          <span className="cms-browser-status">● LIVE</span>
+          <div className="cms-address">https://computer-science-organization.vercel.app/</div>
+          <button
+            type="button"
+            onClick={() =>
+              window.open(
+                "https://computer-science-organization.vercel.app/",
+                "_blank",
+                "noopener,noreferrer",
+              )
+            }
+          >
+            ↗ Open
+          </button>
+        </div>
+        <div className="cms-frame-wrap">
+          <iframe
+            className="cms-frame"
+            src="https://computer-science-organization.vercel.app/"
+            title="Computer Science Organization live preview"
+            loading="lazy"
+          />
+        </div>
+        <div className="cms-browser-footer">
+          If the embedded preview is blocked, use ↗ Open to launch the live website.
         </div>
       </div>
     ),
