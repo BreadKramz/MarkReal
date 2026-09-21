@@ -36,9 +36,13 @@ button:focus-visible {
   overflow: hidden;
   isolation: isolate;
   color: var(--ink);
-  background:
-    radial-gradient(circle at 67% 22%, rgba(126, 153, 139, 0.12), transparent 22%),
-    linear-gradient(180deg, #0b181b 0%, #071113 55%, #0b1516 100%);
+  background-color: #071113;
+  background-image:
+    linear-gradient(rgba(3, 10, 18, 0.14), rgba(3, 10, 18, 0.14)),
+    url("/background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   font-family: "Courier New", Courier, monospace;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -1458,4 +1462,13 @@ body.dragging {
   50% {
     filter: brightness(1.18);
   }
+}
+
+
+/* The wallpaper now supplies the moon, stars, skyline, and city artwork. */
+.desktop-glow,
+.moon,
+.stars,
+.city {
+  display: none;
 }
