@@ -151,6 +151,9 @@ function App() {
   const [startMenuOpen, setStartMenuOpen] = useState(false);
   const [booting, setBooting] = useState(true);
   const [showFullscreenPrompt, setShowFullscreenPrompt] = useState(false);
+  const [locked, setLocked] = useState(true);
+  const [lockPassword, setLockPassword] = useState("");
+  const [lockError, setLockError] = useState(false);
   const zIndex = useRef(20);
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -161,6 +164,17 @@ function App() {
     "PortfolioOS Command Prompt [Version 2.0]",
     "Type help to see available commands.",
   ]);
+
+  const unlockPortfolio = (event) => {
+    event.preventDefault();
+    if (lockPassword === "Code4Life") {
+      setLocked(false);
+      setLockError(false);
+      setLockPassword("");
+      return;
+    }
+    setLockError(true);
+  };
 
   const runCommand = (event) => {
     event.preventDefault();
@@ -528,7 +542,35 @@ function App() {
         </div>
       )}
 
-      {showFullscreenPrompt && (
+      {!booting && locked && (
+        <div className="lockscreen">
+          <div className="lock-time">
+            <b>{now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</b>
+            <span>{now.toLocaleDateString([], { weekday: "long", month: "long", day: "numeric" })}</span>
+          </div>
+          <form className="lock-panel" onSubmit={unlockPortfolio}>
+            <div className="lock-avatar">MR</div>
+            <h2>Mark Real</h2>
+            <p>PORTFOLIO OS // USER LOGIN</p>
+            <div className="lock-input-row">
+              <input
+                type="password"
+                value={lockPassword}
+                onChange={(event) => { setLockPassword(event.target.value); setLockError(false); }}
+                placeholder="Enter password"
+                autoFocus
+                aria-label="Portfolio password"
+              />
+              <button type="submit" aria-label="Unlock PortfolioOS">→</button>
+            </div>
+            {lockError && <span className="lock-error">Incorrect password. Try again.</span>}
+            <div className="lock-note"><span>NOTE.TXT</span>Password hint: <b>Code4Life</b></div>
+          </form>
+          <div className="lock-footer">PORTFOLIO OS 2.5 · SECURE SESSION</div>
+        </div>
+      )}
+
+      {showFullscreenPrompt && !locked && (
         <div className="fullscreen-overlay">
           <div className="fullscreen-dialog window">
             <header className="titlebar">
