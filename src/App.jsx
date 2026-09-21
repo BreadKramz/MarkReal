@@ -166,6 +166,7 @@ function App() {
   const [iconPositions, setIconPositions] = useState({});
   const [recycledIcons, setRecycledIcons] = useState([]);
   const [recycleDrop, setRecycleDrop] = useState(null);
+  const [settlingIcons, setSettlingIcons] = useState([]);
   const iconDrag = useRef(null);
   const desktopIconRefs = useRef({});
   const zIndex = useRef(20);
@@ -519,56 +520,85 @@ function App() {
           const dx = event.clientX - drag.startX;
           const dy = event.clientY - drag.startY;
 
+          setSettlingIcons(labels);
           setIconPositions((current) => {
             const next = { ...current };
-            const occupied = new Set();
-
-            desktopItems
+            const activeLabels = desktopItems
               .map(([, label]) => label)
-              .filter((label) => !recycledIcons.includes(label) && !labels.includes(label))
-              .forEach((label) => {
-                const element = desktopIconRefs.current[label];
-                if (!element) return;
-                const rect = element.getBoundingClientRect();
-                const gx = 16 + Math.round((rect.left - 16) / gridX) * gridX;
-                const gy = 18 + Math.round((rect.top - 18) / gridY) * gridY;
-                occupied.add(`${gx}:${gy}`);
-              });
+              .filter((label) => !recycledIcons.includes(label));
+            const maxX = Math.max(16, window.innerWidth - 116);
+            const maxY = Math.max(18, window.innerHeight - 160);
+            const maxCols = Math.max(1, Math.floor((maxX - 16) / gridX) + 1);
+            const maxRows = Math.max(1, Math.floor((maxY - 18) / gridY) + 1);
 
-            const findFreeSlot = (rawX, rawY) => {
-              const maxX = Math.max(16, window.innerWidth - 116);
-              const maxY = Math.max(18, window.innerHeight - 160);
-              const baseCol = Math.max(0, Math.round((rawX - 16) / gridX));
-              const baseRow = Math.max(0, Math.round((rawY - 18) / gridY));
-              const maxCols = Math.max(1, Math.floor((maxX - 16) / gridX) + 1);
-              const maxRows = Math.max(1, Math.floor((maxY - 18) / gridY) + 1);
+            const snap = (x, y) => ({
+              x: 16 + Math.min(maxCols - 1, Math.max(0, Math.round((x - 16) / gridX))) * gridX,
+              y: 18 + Math.min(maxRows - 1, Math.max(0, Math.round((y - 18) / gridY))) * gridY,
+            });
+            const keyOf = (p) => `${p.x}:${p.y}`;
 
-              for (let radius = 0; radius < Math.max(maxCols, maxRows); radius += 1) {
+            const positions = {};
+            activeLabels.forEach((label, index) => {
+              const element = desktopIconRefs.current[label];
+              const rect = element?.getBoundingClientRect();
+              positions[label] = snap(
+                next[label]?.x ?? rect?.left ?? (16 + Math.floor(index / 7) * gridX),
+                next[label]?.y ?? rect?.top ?? (18 + (index % 7) * gridY),
+              );
+            });
+
+            const findNearestFree = (desired, occupied) => {
+              const baseCol = Math.round((desired.x - 16) / gridX);
+              const baseRow = Math.round((desired.y - 18) / gridY);
+              for (let radius = 0; radius <= Math.max(maxCols, maxRows); radius += 1) {
                 for (let rowOffset = -radius; rowOffset <= radius; rowOffset += 1) {
                   for (let colOffset = -radius; colOffset <= radius; colOffset += 1) {
                     if (Math.max(Math.abs(rowOffset), Math.abs(colOffset)) !== radius) continue;
-                    const col = Math.min(maxCols - 1, Math.max(0, baseCol + colOffset));
-                    const row = Math.min(maxRows - 1, Math.max(0, baseRow + rowOffset));
-                    const x = 16 + col * gridX;
-                    const y = 18 + row * gridY;
-                    const key = `${x}:${y}`;
-                    if (!occupied.has(key)) {
-                      occupied.add(key);
-                      return { x, y };
-                    }
+                    const col = baseCol + colOffset;
+                    const row = baseRow + rowOffset;
+                    if (col < 0 || row < 0 || col >= maxCols || row >= maxRows) continue;
+                    const candidate = { x: 16 + col * gridX, y: 18 + row * gridY };
+                    if (!occupied.has(keyOf(candidate))) return candidate;
                   }
                 }
               }
-              return { x: 16, y: 18 };
+              return desired;
             };
+
+            const moving = new Set(labels);
+            const occupied = new Set(
+              activeLabels
+                .filter((label) => !moving.has(label))
+                .map((label) => keyOf(positions[label])),
+            );
 
             labels.forEach((label) => {
               const origin = origins[label];
               if (!origin) return;
-              next[label] = findFreeSlot(origin.x + dx, origin.y + dy);
+              const desired = snap(origin.x + dx, origin.y + dy);
+              const occupant = activeLabels.find(
+                (other) => other !== label && !moving.has(other) && keyOf(positions[other]) === keyOf(desired),
+              );
+
+              if (occupant) {
+                occupied.delete(keyOf(positions[occupant]));
+                const displaced = findNearestFree(positions[occupant], new Set([...occupied, keyOf(desired)]));
+                positions[occupant] = displaced;
+                next[occupant] = displaced;
+                occupied.add(keyOf(displaced));
+                setSettlingIcons((currentLabels) => [...new Set([...currentLabels, occupant])]);
+              }
+
+              const target = occupied.has(keyOf(desired))
+                ? findNearestFree(desired, occupied)
+                : desired;
+              positions[label] = target;
+              next[label] = target;
+              occupied.add(keyOf(target));
             });
             return next;
           });
+          window.setTimeout(() => setSettlingIcons([]), 320);
         }
       }
 
@@ -1113,7 +1143,7 @@ function App() {
         {desktopItems.filter(([, label]) => !recycledIcons.includes(label)).map(([symbol, label, id, iconType]) => (
           <button
             ref={(element) => { desktopIconRefs.current[label] = element; }}
-            className={`desktop-item ${selectedIcons.includes(label) ? "selected" : ""} ${iconPositions[label] ? "free-position" : ""}`}
+            className={`desktop-item ${selectedIcons.includes(label) ? "selected" : ""} ${iconPositions[label] ? "free-position" : ""} ${settlingIcons.includes(label) ? "settling" : ""}`}
             key={label}
             style={iconPositions[label] ? { left: iconPositions[label].x, top: iconPositions[label].y } : undefined}
             onMouseDown={(event) => startIconDrag(event, label)}
