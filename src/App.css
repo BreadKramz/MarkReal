@@ -3390,5 +3390,5 @@ body.dragging .utility-drag-handle,
 
 /* Raise the animated wallpaper slightly while keeping the lower scene visible */
 .desktop {
-  background-position: center calc(100% - 28px);
+  background-position: center calc(100% - -50px);
 }
