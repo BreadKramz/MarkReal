@@ -158,8 +158,8 @@ function App() {
   const zIndex = useRef(20);
   const utilityDrag = useRef(null);
   const [utilityPositions, setUtilityPositions] = useState({
-    player: { x: null, y: 58 },
-    note: { x: null, y: 245 },
+    player: { x: null, y: 105 },
+    note: { x: null, y: 315 },
   });
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -708,10 +708,12 @@ function App() {
       <div className="city city-front" />
       <div className="noise" />
 
-      <div className="desktop-brand">
-        <span>MR</span>
-        <small>PORTFOLIO OS</small>
-      </div>
+      {(booting || locked) && (
+        <div className="desktop-brand">
+          <span>MR</span>
+          <small>PORTFOLIO OS</small>
+        </div>
+      )}
 
       <aside className="desktop-icons">
         {desktopItems.map(([symbol, label, id, iconType]) => (
