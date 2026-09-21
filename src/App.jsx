@@ -165,9 +165,17 @@ function App() {
     "Type help to see available commands.",
   ]);
 
-  const unlockPortfolio = (event) => {
+  const unlockPortfolio = async (event) => {
     event.preventDefault();
     if (lockPassword === "Code4Life") {
+      const audio = audioRef.current;
+      if (audio) {
+        try {
+          await audio.play();
+        } catch {
+          setIsPlaying(false);
+        }
+      }
       setLocked(false);
       setLockError(false);
       setLockPassword("");
@@ -588,6 +596,12 @@ function App() {
                   <button
                     className="primary-action"
                     onClick={async () => {
+                      const audio = audioRef.current;
+                      try {
+                        if (audio?.paused) await audio.play();
+                      } catch {
+                        setIsPlaying(false);
+                      }
                       try {
                         await document.documentElement.requestFullscreen();
                       } catch {
@@ -600,7 +614,15 @@ function App() {
                   </button>
                   <button
                     className="secondary-action"
-                    onClick={() => setShowFullscreenPrompt(false)}
+                    onClick={async () => {
+                      const audio = audioRef.current;
+                      try {
+                        if (audio?.paused) await audio.play();
+                      } catch {
+                        setIsPlaying(false);
+                      }
+                      setShowFullscreenPrompt(false);
+                    }}
                   >
                     No, Continue
                   </button>
