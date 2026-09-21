@@ -3575,3 +3575,396 @@ body.dragging .utility-drag-handle,
     animation: none !important;
   }
 }
+
+
+/* PortfolioOS 3.0 — readability + desktop polish */
+:root {
+  --ui-text: 11px;
+  --ui-small: 9px;
+  --ui-tiny: 8px;
+}
+
+.desktop-icons {
+  gap: 12px;
+}
+
+.desktop-item {
+  width: 100px;
+  min-height: 92px;
+  padding: 5px 4px;
+  gap: 7px;
+  font-size: 12px;
+}
+
+.pixel-icon {
+  width: 48px;
+  height: 48px;
+  font-size: 20px;
+  border-radius: 7px;
+  filter: drop-shadow(0 5px 7px rgba(0,0,0,.55));
+}
+
+.pixel-icon i {
+  font-size: 17px;
+}
+
+.icon-label {
+  padding: 3px 5px;
+  border-radius: 2px;
+  background: rgba(2, 13, 22, .58);
+  color: #f1e9df;
+  font-size: 10px;
+  line-height: 1.35;
+  text-shadow: 1px 1px 2px #000, 0 0 6px #000;
+  backdrop-filter: blur(3px);
+}
+
+.app-window {
+  min-width: 340px;
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,.9),
+    0 18px 55px rgba(0,0,0,.58),
+    0 0 30px rgba(50,112,148,.09);
+}
+
+.titlebar {
+  min-height: 30px;
+  padding: 5px 7px;
+}
+
+.window-title {
+  font-size: 10px;
+  letter-spacing: .03em;
+}
+
+.window-dot {
+  width: 7px;
+  height: 7px;
+}
+
+.window-actions button {
+  min-width: 25px;
+  height: 21px;
+  font-size: 11px;
+}
+
+.menubar {
+  min-height: 25px;
+  padding: 5px 9px;
+  gap: 16px;
+  font-size: 9px;
+}
+
+.window-body {
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.hero .hello,
+.hero .role,
+.hero .tagline,
+.about-content p,
+.project-card p,
+.experience-content p,
+.contact-content p {
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.hero .tagline {
+  max-width: 410px;
+}
+
+.hero h1 {
+  font-size: clamp(40px, 5.5vw, 64px);
+  line-height: .92;
+}
+
+.eyebrow,
+.section-heading small,
+.project-card small {
+  font-size: 9px;
+  letter-spacing: .08em;
+}
+
+.section-heading h3,
+.about-content h3,
+.contact-content h3 {
+  font-size: 19px;
+}
+
+.project-card h4 {
+  font-size: 12px;
+}
+
+.project-card {
+  padding: 14px;
+  gap: 13px;
+}
+
+.project-launch,
+.primary-action,
+.secondary-action {
+  min-height: 32px;
+  padding: 8px 12px;
+  font-size: 9px;
+}
+
+.skill-grid span {
+  min-height: 31px;
+  padding: 8px 10px;
+  font-size: 9px;
+}
+
+.timeline-item {
+  gap: 14px;
+}
+
+.timeline-item > span,
+.timeline-item b,
+.timeline-item p {
+  font-size: 10px;
+}
+
+.cmd-content,
+.cmd-line input,
+.cmd-line label,
+.cmd-history p {
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.system-widget {
+  width: 210px;
+  padding: 13px;
+  font-size: 9px;
+}
+
+.system-widget-head,
+.system-widget small {
+  font-size: 8px;
+}
+
+.player {
+  width: 320px;
+}
+
+.player,
+.note {
+  font-size: 10px;
+}
+
+.player-info small,
+.player-info span,
+.player-bottom,
+.note small,
+.note b {
+  font-size: 8px;
+}
+
+.player-info b,
+.note p {
+  font-size: 10px;
+}
+
+.note {
+  width: 220px;
+}
+
+.taskbar {
+  height: 54px;
+  padding: 5px 8px;
+  font-size: 10px;
+  box-shadow: 0 -1px rgba(116,158,184,.25), 0 -10px 28px rgba(0,0,0,.32);
+  backdrop-filter: blur(14px);
+}
+
+.start {
+  min-width: 96px;
+  height: 42px;
+  padding: 0 12px;
+  gap: 8px;
+  font-size: 10px;
+}
+
+.start > span {
+  width: 27px;
+  height: 27px;
+  font-size: 9px;
+}
+
+.task-list {
+  gap: 5px;
+}
+
+.task {
+  min-width: 135px;
+  max-width: 205px;
+  height: 40px;
+  padding: 0 10px;
+  font-size: 9px;
+}
+
+.task i {
+  width: 7px;
+  height: 7px;
+}
+
+.task-motto {
+  font-size: 8px;
+  letter-spacing: .08em;
+}
+
+.tray {
+  min-width: 150px;
+  gap: 9px;
+  padding: 0 9px;
+}
+
+.tray-icons {
+  font-size: 10px;
+}
+
+.tray b {
+  font-size: 10px;
+}
+
+.tray small {
+  font-size: 8px;
+}
+
+.start-menu {
+  bottom: 54px;
+  width: 310px;
+  font-size: 10px;
+}
+
+.start-menu-head {
+  padding: 13px;
+}
+
+.start-avatar {
+  width: 39px;
+  height: 39px;
+  font-size: 10px;
+}
+
+.start-menu-head b {
+  font-size: 11px;
+}
+
+.start-menu-head small,
+.start-links small {
+  font-size: 8px;
+}
+
+.start-links button {
+  min-height: 49px;
+  padding: 8px 11px;
+}
+
+.start-links button > span {
+  width: 31px;
+  font-size: 15px;
+}
+
+.start-links b {
+  font-size: 10px;
+}
+
+.start-footer button {
+  min-height: 32px;
+  font-size: 9px;
+}
+
+.lock-panel h2 {
+  font-size: 20px;
+}
+
+.lock-panel > p,
+.lock-note,
+.lock-fullscreen-alert-body p {
+  font-size: 9px;
+}
+
+.lock-input-row input,
+.lock-input-row button {
+  min-height: 38px;
+  font-size: 10px;
+}
+
+.lock-time b {
+  font-size: clamp(42px, 7vw, 72px);
+}
+
+.lock-time span {
+  font-size: 11px;
+}
+
+.welcome-toast {
+  width: 280px;
+  padding: 14px 16px;
+}
+
+.welcome-toast b {
+  font-size: 10px;
+}
+
+.welcome-toast small {
+  font-size: 8px;
+}
+
+.cms-browser-bar,
+.cms-browser-footer {
+  font-size: 9px;
+}
+
+.cms-browser-bar button {
+  min-height: 29px;
+  font-size: 9px;
+}
+
+/* clearer focus/hover states throughout the desktop */
+.desktop-item:hover .icon-label,
+.desktop-item:focus-visible .icon-label {
+  background: rgba(10, 35, 52, .9);
+  outline: 1px solid rgba(239,179,109,.65);
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid #efb36d;
+  outline-offset: 2px;
+}
+
+@media (max-width: 900px) {
+  .desktop-item {
+    width: 88px;
+    min-height: 82px;
+  }
+
+  .pixel-icon {
+    width: 43px;
+    height: 43px;
+  }
+
+  .taskbar {
+    height: 52px;
+  }
+
+  .task {
+    min-width: 108px;
+  }
+
+  .task-motto {
+    display: none;
+  }
+
+  .tray {
+    min-width: 118px;
+  }
+
+  .start-menu {
+    bottom: 52px;
+  }
+}
