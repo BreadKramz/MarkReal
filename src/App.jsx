@@ -395,9 +395,21 @@ function App() {
   };
 
   const deleteDesktopIcon = (label) => {
+    if (label === "Recycle Bin") {
+      setContextMenu(null);
+      return;
+    }
     setHiddenIcons((current) => current.includes(label) ? current : [...current, label]);
     setSelectedIcons([]);
     setContextMenu(null);
+  };
+
+  const restoreDesktopIcon = (label) => {
+    setHiddenIcons((current) => current.filter((item) => item !== label));
+  };
+
+  const emptyRecycleBin = () => {
+    setHiddenIcons([]);
   };
 
   const showDesktopContextMenu = (event) => {
@@ -708,12 +720,35 @@ function App() {
       <div className="recycle-bin-content">
         <div className="recycle-bin-toolbar">
           <b>RECYCLE BIN</b>
+          <button type="button" onClick={emptyRecycleBin} disabled={!hiddenIcons.length}>
+            Empty Bin
+          </button>
         </div>
-        <div className="recycle-empty">
-          <span>♲</span>
-          <p>Recycle Bin is empty.</p>
-          <small>Desktop shortcuts are protected and cannot be deleted.</small>
-        </div>
+        {hiddenIcons.length === 0 ? (
+          <div className="recycle-empty">
+            <span>♲</span>
+            <p>Recycle Bin is empty.</p>
+            <small>Deleted desktop shortcuts will appear here.</small>
+          </div>
+        ) : (
+          <div className="recycle-files">
+            {hiddenIcons.map((label) => {
+              const item = desktopItems.find(([, name]) => name === label);
+              return (
+                <button
+                  key={label}
+                  type="button"
+                  onDoubleClick={() => restoreDesktopIcon(label)}
+                  title="Double-click to restore"
+                >
+                  <span>{item?.[0] || "□"}</span>
+                  <b>{label}</b>
+                  <small>Double-click to restore</small>
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
     ),
 
@@ -743,6 +778,9 @@ function App() {
   return (
     <main
       className="desktop"
+      onContextMenuCapture={(event) => {
+        event.preventDefault();
+      }}
       onMouseDown={(event) => {
         if (startMenuOpen) setStartMenuOpen(false);
         if (contextMenu) setContextMenu(null);
@@ -767,9 +805,11 @@ function App() {
         <div className="lockscreen">
           <div className="lock-time">
             <b className="lock-clock">
-              {now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              <span className="lock-hours-minutes">
+                {now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              </span>
               <span className="lock-seconds" key={now.getSeconds()}>
-                :{String(now.getSeconds()).padStart(2, "0")}
+                {String(now.getSeconds()).padStart(2, "0")}
               </span>
             </b>
             <span>{now.toLocaleDateString([], { weekday: "long", month: "long", day: "numeric" })}</span>
@@ -940,9 +980,11 @@ function App() {
                 <span>↗</span><div><b>Open</b><small>{contextMenu.iconLabel}</small></div>
               </button>
               <div className="context-divider" />
-              <button className="context-delete" onClick={() => deleteDesktopIcon(contextMenu.iconLabel)}>
-                <span>×</span><div><b>Delete shortcut</b><small>Remove from desktop</small></div>
-              </button>
+              {contextMenu.iconLabel !== "Recycle Bin" && (
+                <button className="context-delete" onClick={() => deleteDesktopIcon(contextMenu.iconLabel)}>
+                  <span>×</span><div><b>Delete shortcut</b><small>Move to Recycle Bin</small></div>
+                </button>
+              )}
             </>
           ) : (
             <>
