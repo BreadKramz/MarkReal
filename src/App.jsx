@@ -156,6 +156,11 @@ function App() {
   const [lockError, setLockError] = useState(false);
   const [showWelcomeToast, setShowWelcomeToast] = useState(false);
   const zIndex = useRef(20);
+  const utilityDrag = useRef(null);
+  const [utilityPositions, setUtilityPositions] = useState({
+    player: { x: null, y: 58 },
+    note: { x: null, y: 245 },
+  });
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -230,6 +235,50 @@ function App() {
       audio.pause();
     }
   };
+
+  const startUtilityDrag = (event, id) => {
+    if (event.button !== 0) return;
+    const element = event.currentTarget.closest(id === "player" ? ".player" : ".note");
+    if (!element) return;
+    const rect = element.getBoundingClientRect();
+    utilityDrag.current = {
+      id,
+      offsetX: event.clientX - rect.left,
+      offsetY: event.clientY - rect.top,
+    };
+    setUtilityPositions((current) => ({
+      ...current,
+      [id]: { x: rect.left, y: rect.top },
+    }));
+    document.body.classList.add("dragging");
+    event.preventDefault();
+  };
+
+  useEffect(() => {
+    const moveUtility = (event) => {
+      if (!utilityDrag.current) return;
+      const { id, offsetX, offsetY } = utilityDrag.current;
+      const width = id === "player" ? 300 : 205;
+      const height = id === "player" ? 154 : 205;
+      setUtilityPositions((current) => ({
+        ...current,
+        [id]: {
+          x: Math.max(0, Math.min(window.innerWidth - width, event.clientX - offsetX)),
+          y: Math.max(0, Math.min(window.innerHeight - 52 - height, event.clientY - offsetY)),
+        },
+      }));
+    };
+    const stopUtilityDrag = () => {
+      utilityDrag.current = null;
+      document.body.classList.remove("dragging");
+    };
+    window.addEventListener("mousemove", moveUtility);
+    window.addEventListener("mouseup", stopUtilityDrag);
+    return () => {
+      window.removeEventListener("mousemove", moveUtility);
+      window.removeEventListener("mouseup", stopUtilityDrag);
+    };
+  }, []);
 
   const seekMusic = (event) => {
     const audio = audioRef.current;
@@ -693,7 +742,10 @@ function App() {
         </RetroWindow>
       ))}
 
-      <section className="player window utility-window">
+      <section
+        className="player window utility-window"
+        style={utilityPositions.player.x === null ? undefined : { left: utilityPositions.player.x, top: utilityPositions.player.y, right: "auto" }}
+      >
         <audio
           ref={audioRef}
           src="/music/lofi.mp3"
@@ -705,7 +757,7 @@ function App() {
           onLoadedMetadata={(event) => setDuration(event.currentTarget.duration)}
           onDurationChange={(event) => setDuration(event.currentTarget.duration)}
         />
-        <header className="titlebar">
+        <header className="titlebar utility-drag-handle" onMouseDown={(event) => startUtilityDrag(event, "player")}>
           <span className="window-title">
             <i className="window-dot" />
             now_playing.exe
@@ -739,9 +791,12 @@ function App() {
         </div>
       </section>
 
-      <section className="note">
-        <header>
-          <span>note.txt</span>
+      <section
+        className="note"
+        style={utilityPositions.note.x === null ? undefined : { left: utilityPositions.note.x, top: utilityPositions.note.y, right: "auto" }}
+      >
+        <header className="utility-drag-handle" onMouseDown={(event) => startUtilityDrag(event, "note")}>
+          <span>note.exe</span>
           <span>×</span>
         </header>
         <div>
