@@ -3170,9 +3170,9 @@ body.dragging .utility-drag-handle,
 
 /* Utility default placement refinement */
 .player {
-  top: 105px;
+  top: 135px;
 }
 
 .note {
-  top: 315px;
+  top: 355px;
 }
