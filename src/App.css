@@ -5165,3 +5165,56 @@ body.icon-dragging {
     animation: none;
   }
 }
+
+
+/* Lock clock final: simple, elegant, no boxed seconds or decorative marker */
+.lock-clock-row {
+  display: block;
+}
+
+.lock-clock-row .lock-clock {
+  display: block;
+  margin: 0;
+  padding: 0;
+  color: #f2eee8;
+  background: none;
+  border: 0;
+  font-size: clamp(50px, 6.4vw, 74px);
+  font-weight: 500;
+  line-height: .95;
+  letter-spacing: -.045em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  text-shadow:
+    0 3px 12px rgba(0,0,0,.68),
+    0 10px 30px rgba(0,0,0,.28);
+}
+
+.lock-main-time,
+.lock-clock-seconds {
+  all: unset;
+}
+
+.lock-time .lock-date {
+  position: static;
+  display: block;
+  margin: 10px 0 0 2px;
+  padding: 0;
+  color: rgba(224,234,238,.88);
+  font-size: clamp(12px, 1.15vw, 15px);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: .035em;
+  text-shadow: 0 2px 8px rgba(0,0,0,.72);
+}
+
+.lock-time .lock-date::before {
+  content: none;
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .lock-clock-row .lock-clock {
+    font-size: clamp(42px, 12vw, 60px);
+  }
+}
