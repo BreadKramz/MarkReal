@@ -3166,3 +3166,13 @@ body.dragging .utility-drag-handle,
   z-index: 90;
   box-shadow: 0 18px 45px rgba(0,0,0,.58), 0 0 22px rgba(70,130,165,.1);
 }
+
+
+/* Utility default placement refinement */
+.player {
+  top: 105px;
+}
+
+.note {
+  top: 315px;
+}
