@@ -175,6 +175,7 @@ function App() {
     note: { x: null, y: 355 },
   });
   const audioRef = useRef(null);
+  const alertAudioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -396,6 +397,13 @@ function App() {
       const next = current + 1;
       if (next >= 10) {
         setRecycleWarning(true);
+
+        const alertAudio = alertAudioRef.current;
+        if (alertAudio) {
+          alertAudio.currentTime = 0;
+          alertAudio.play().catch(() => {});
+        }
+
         return 0;
       }
       return next;
@@ -1105,6 +1113,7 @@ function App() {
         className="player window utility-window"
         style={utilityPositions.player.x === null ? undefined : { left: utilityPositions.player.x, top: utilityPositions.player.y, right: "auto" }}
       >
+        <audio ref={alertAudioRef} src="/music/alert.mp3" preload="auto" />
         <audio
           ref={audioRef}
           src="/music/lofi.mp3"
