@@ -151,6 +151,7 @@ function App() {
   const [windows, setWindows] = useState(initialWindows);
   const [now, setNow] = useState(new Date());
   const [startMenuOpen, setStartMenuOpen] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const [booting, setBooting] = useState(true);
   const [showFullscreenPrompt, setShowFullscreenPrompt] = useState(true);
   const [locked, setLocked] = useState(true);
@@ -808,6 +809,7 @@ function App() {
       }}
       onMouseDown={(event) => {
         if (startMenuOpen) setStartMenuOpen(false);
+        if (calendarOpen) setCalendarOpen(false);
         if (contextMenu) setContextMenu(null);
         startDesktopSelection(event);
       }}
@@ -1194,6 +1196,32 @@ function App() {
         </div>
       )}
 
+      {calendarOpen && !booting && !locked && (
+        <div className="tray-calendar" onMouseDown={(event) => event.stopPropagation()}>
+          <div className="tray-calendar-head">
+            <div>
+              <small>{now.toLocaleDateString([], { weekday: "long" })}</small>
+              <b>{now.toLocaleDateString([], { month: "long", day: "numeric", year: "numeric" })}</b>
+            </div>
+            <span>{now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+          </div>
+          <div className="calendar-month">
+            <div className="calendar-weekdays">
+              {["SUN","MON","TUE","WED","THU","FRI","SAT"].map((day) => <span key={day}>{day}</span>)}
+            </div>
+            <div className="calendar-days">
+              {Array.from({ length: new Date(now.getFullYear(), now.getMonth(), 1).getDay() }).map((_, index) => (
+                <span className="calendar-blank" key={`blank-${index}`} />
+              ))}
+              {Array.from({ length: new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate() }, (_, index) => index + 1).map((day) => (
+                <span className={day === now.getDate() ? "today" : ""} key={day}>{day}</span>
+              ))}
+            </div>
+          </div>
+          <div className="tray-calendar-foot">PORTFOLIO OS · SYSTEM CALENDAR</div>
+        </div>
+      )}
+
       <footer
         className="taskbar"
         onMouseDown={(event) => event.stopPropagation()}
@@ -1230,8 +1258,18 @@ function App() {
         <div className="task-motto">CODE / CREATE / IMPROVE</div>
 
         <div className="tray">
-          <span className="tray-icons">▥　♬　▰</span>
-          <div>
+          <button className="tray-icons" type="button" title="System tray">▥　♬　▰</button>
+          <button
+            className={`tray-clock ${calendarOpen ? "active" : ""}`}
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              setCalendarOpen((current) => !current);
+              setStartMenuOpen(false);
+            }}
+            aria-expanded={calendarOpen}
+            aria-label="Open calendar"
+          >
             <b>
               {now.toLocaleTimeString([], {
                 hour: "2-digit",
@@ -1239,7 +1277,7 @@ function App() {
               })}
             </b>
             <small>{now.toLocaleDateString()}</small>
-          </div>
+          </button>
         </div>
       </footer>
     </main>
