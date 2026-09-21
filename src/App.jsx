@@ -156,6 +156,8 @@ function App() {
   const [lockPassword, setLockPassword] = useState("");
   const [lockError, setLockError] = useState(false);
   const [showWelcomeToast, setShowWelcomeToast] = useState(false);
+  const [recycleClicks, setRecycleClicks] = useState(0);
+  const [recycleWarning, setRecycleWarning] = useState(false);
   const zIndex = useRef(20);
   const utilityDrag = useRef(null);
   const [utilityPositions, setUtilityPositions] = useState({
@@ -351,6 +353,19 @@ function App() {
   };
 
   const moveWindow = (id, x, y) => patchWindow(id, { x, y });
+
+  const handleRecycleClick = () => {
+    if (recycleWarning) return;
+
+    setRecycleClicks((current) => {
+      const next = current + 1;
+      if (next >= 10) {
+        setRecycleWarning(true);
+        return 0;
+      }
+      return next;
+    });
+  };
 
   const windowContent = {
     welcome: (
@@ -792,13 +807,41 @@ function App() {
           <button
             className="desktop-item"
             key={label}
-            onDoubleClick={() => openWindow(id)}
+            onClick={() => iconType === "trash" && handleRecycleClick()}
+            onDoubleClick={() => id && openWindow(id)}
           >
             <span className={`pixel-icon icon-${iconType}`}><i>{symbol}</i></span>
             <span className="icon-label">{label}</span>
           </button>
         ))}
       </aside>
+
+      {recycleWarning && (
+        <div className="recycle-easter-egg" role="alert" aria-live="assertive">
+          <div className="recycle-warning-scanlines" />
+          <div className="recycle-warning-symbol">⚠</div>
+          <div className="recycle-warning-code">PORTFOLIO OS // SECURITY EVENT 0x0A</div>
+          <h2>FORBIDDEN ACTION</h2>
+          <p>
+            RECYCLE BIN ACCESS LIMIT EXCEEDED
+            <br />
+            Repeated interaction has triggered system protection.
+          </p>
+          <div className="recycle-warning-terminal">
+            &gt; click_count ........ 10/10<br />
+            &gt; threat_level ....... RED<br />
+            &gt; recycle_bin ........ LOCKED<br />
+            &gt; user ............... MARK_REAL
+          </div>
+          <button
+            type="button"
+            onClick={() => setRecycleWarning(false)}
+          >
+            ACKNOWLEDGE WARNING
+          </button>
+          <small>Nice try. The bin is watching you.</small>
+        </div>
+      )}
 
       {Object.entries(definitions).map(([id, definition]) => (
         <RetroWindow
