@@ -133,7 +133,7 @@ function App() {
     Object.entries(definitions).map(([id, definition], index) => [
       id,
       {
-        open: ["welcome", "about", "system"].includes(id),
+        open: id === "welcome",
         minimized: false,
         maximized: false,
         x: definition.pos.x,
