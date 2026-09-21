@@ -625,26 +625,35 @@ function App() {
             </div>
             {lockError && <span className="lock-error">Incorrect password. Try again.</span>}
             <div className="lock-note"><span>NOTE.TXT</span>Password hint: <b>Code4Life</b></div>
-            <div className="lock-fullscreen">
-              <span>DISPLAY MODE</span>
-              <p>For the full PortfolioOS experience, enter fullscreen?</p>
-              <div className="lock-fullscreen-actions">
-                <button
-                  type="button"
-                  onClick={async () => {
-                    try {
-                      await document.documentElement.requestFullscreen();
-                    } catch {
-                      // Fullscreen may be unavailable or blocked by the browser.
-                    }
-                  }}
-                >
-                  Yes, Fullscreen
-                </button>
-                <button type="button">No, Continue</button>
+          </form>
+          <div className="lock-fullscreen-alert">
+            <div className="lock-fullscreen-alert-head">
+              <span><i /> PortfolioOS Display</span>
+              <b>×</b>
+            </div>
+            <div className="lock-fullscreen-alert-body">
+              <div className="lock-display-icon">▣</div>
+              <div>
+                <b>Fullscreen recommended</b>
+                <p>For the full PortfolioOS experience, enter fullscreen mode?</p>
+                <div className="lock-fullscreen-actions">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        await document.documentElement.requestFullscreen();
+                      } catch {
+                        // Fullscreen may be unavailable or blocked by the browser.
+                      }
+                    }}
+                  >
+                    Yes, Fullscreen
+                  </button>
+                  <button type="button">No, Continue</button>
+                </div>
               </div>
             </div>
-          </form>
+          </div>
           <div className="lock-footer">PORTFOLIO OS 2.5 · SECURE SESSION</div>
         </div>
       )}
