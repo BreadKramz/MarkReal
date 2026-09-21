@@ -806,13 +806,12 @@ function App() {
           <div className="lock-time">
             <div className="lock-clock-row">
               <b className="lock-clock">
-                <span>{now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true }).replace(/\s?(AM|PM)$/i, "")}</span>
-                <span className="lock-seconds" key={now.getSeconds()}>
-                  :{String(now.getSeconds()).padStart(2, "0")}
-                </span>
-                <span className="lock-period">
-                  {now.toLocaleTimeString([], { hour: "2-digit", hour12: true }).match(/AM|PM/i)?.[0] || ""}
-                </span>
+                {now.toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                  hour12: true,
+                })}
               </b>
             </div>
             <span className="lock-date">
