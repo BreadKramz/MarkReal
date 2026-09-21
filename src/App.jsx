@@ -166,8 +166,15 @@ function App() {
     if (!input) return;
 
     const cmd = input.toLowerCase();
+
+    if (cmd === "cls") {
+      setCommandHistory([]);
+      setCommand("");
+      return;
+    }
+
     let output = "";
-    if (cmd === "help") output = "Commands: help, about, projects";
+    if (cmd === "help") output = "Commands: help, about, projects, cls";
     else if (cmd === "about") output = "Mark Real - Computer Science student and developer.";
     else if (cmd === "projects") output = "Projects: Church Management System | PortfolioOS";
     else output = input + " is not recognized. Type help.";
