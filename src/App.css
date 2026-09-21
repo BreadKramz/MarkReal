@@ -4592,3 +4592,20 @@ body.icon-dragging {
     animation: none;
   }
 }
+
+
+/* Icon-specific context menu delete action */
+.desktop-context-menu .context-delete {
+  color: #f0b3a1;
+}
+
+.desktop-context-menu .context-delete:hover {
+  background: rgba(143, 48, 39, .38);
+  color: #ffd5c9;
+}
+
+.desktop-context-menu .context-delete > span {
+  border-color: rgba(192, 84, 66, .48);
+  background: #3a1817;
+  color: #ff9e83;
+}
