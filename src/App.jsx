@@ -158,6 +158,9 @@ function App() {
   const [showWelcomeToast, setShowWelcomeToast] = useState(false);
   const [recycleClicks, setRecycleClicks] = useState(0);
   const [recycleWarning, setRecycleWarning] = useState(false);
+  const [selectionBox, setSelectionBox] = useState(null);
+  const selectionStart = useRef(null);
+  const [contextMenu, setContextMenu] = useState(null);
   const zIndex = useRef(20);
   const utilityDrag = useRef(null);
   const [utilityPositions, setUtilityPositions] = useState({
@@ -366,6 +369,49 @@ function App() {
       return next;
     });
   };
+
+  const startDesktopSelection = (event) => {
+    if (event.button !== 0 || event.target !== event.currentTarget || locked || booting) return;
+    setContextMenu(null);
+    selectionStart.current = { x: event.clientX, y: event.clientY };
+    setSelectionBox({ x: event.clientX, y: event.clientY, width: 0, height: 0 });
+  };
+
+  const showDesktopContextMenu = (event) => {
+    if (event.target !== event.currentTarget || locked || booting) return;
+    event.preventDefault();
+    setSelectionBox(null);
+    selectionStart.current = null;
+    setContextMenu({
+      x: Math.min(event.clientX, window.innerWidth - 220),
+      y: Math.min(event.clientY, window.innerHeight - 245),
+    });
+  };
+
+  useEffect(() => {
+    const moveSelection = (event) => {
+      if (!selectionStart.current) return;
+      const start = selectionStart.current;
+      setSelectionBox({
+        x: Math.min(start.x, event.clientX),
+        y: Math.min(start.y, event.clientY),
+        width: Math.abs(event.clientX - start.x),
+        height: Math.abs(event.clientY - start.y),
+      });
+    };
+
+    const stopSelection = () => {
+      selectionStart.current = null;
+      window.setTimeout(() => setSelectionBox(null), 90);
+    };
+
+    window.addEventListener("mousemove", moveSelection);
+    window.addEventListener("mouseup", stopSelection);
+    return () => {
+      window.removeEventListener("mousemove", moveSelection);
+      window.removeEventListener("mouseup", stopSelection);
+    };
+  }, []);
 
   const windowContent = {
     welcome: (
@@ -645,7 +691,12 @@ function App() {
   return (
     <main
       className="desktop"
-      onMouseDown={() => startMenuOpen && setStartMenuOpen(false)}
+      onMouseDown={(event) => {
+        if (startMenuOpen) setStartMenuOpen(false);
+        if (contextMenu) setContextMenu(null);
+        startDesktopSelection(event);
+      }}
+      onContextMenu={showDesktopContextMenu}
     >
       {booting && (
         <div className="boot">
@@ -799,6 +850,44 @@ function App() {
         <div className="desktop-brand">
           <span>MR</span>
           <small>PORTFOLIO OS</small>
+        </div>
+      )}
+
+      {selectionBox && (
+        <div
+          className="desktop-selection-box"
+          style={{
+            left: selectionBox.x,
+            top: selectionBox.y,
+            width: selectionBox.width,
+            height: selectionBox.height,
+          }}
+        />
+      )}
+
+      {contextMenu && (
+        <div
+          className="desktop-context-menu"
+          style={{ left: contextMenu.x, top: contextMenu.y }}
+          onMouseDown={(event) => event.stopPropagation()}
+          onContextMenu={(event) => event.preventDefault()}
+        >
+          <button onClick={() => { openWindow("welcome"); setContextMenu(null); }}>
+            <span>▦</span><div><b>Open Portfolio</b><small>Welcome.exe</small></div>
+          </button>
+          <button onClick={() => { openWindow("projects"); setContextMenu(null); }}>
+            <span>▤</span><div><b>Projects</b><small>Browse selected work</small></div>
+          </button>
+          <button onClick={() => { openWindow("cmd"); setContextMenu(null); }}>
+            <span>&gt;_</span><div><b>Command Prompt</b><small>Open terminal</small></div>
+          </button>
+          <div className="context-divider" />
+          <button onClick={() => setContextMenu(null)}>
+            <span>↻</span><div><b>Refresh Desktop</b><small>PortfolioOS workspace</small></div>
+          </button>
+          <button onClick={() => { setStartMenuOpen(true); setContextMenu(null); }}>
+            <span>MR</span><div><b>Start Menu</b><small>All applications</small></div>
+          </button>
         </div>
       )}
 
