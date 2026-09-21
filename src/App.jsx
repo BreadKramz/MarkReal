@@ -394,7 +394,7 @@ function App() {
         <div className="timeline-item">
           <span>2023–2026</span>
           <div>
-            <b>Negros Oriental State University</b>
+            <b>Negros Oriental State University (NORSU)</b>
             <p>4th Year · Bachelor of Science in Computer Science</p>
           </div>
         </div>
