@@ -365,7 +365,39 @@ function App() {
       </div>
     ),
 
-    cms: (\n      <div className="cms-browser">\n        <div className="cms-browser-bar">\n          <span className="cms-browser-status">● LIVE</span>\n          <div className="cms-address">https://omp-church.vercel.app/</div>\n          <button type="button" onClick={() => window.open("https://omp-church.vercel.app/", "_blank", "noopener,noreferrer")}>↗ Open</button>\n        </div>\n        <div className="cms-frame-wrap">\n          <iframe className="cms-frame" src="https://omp-church.vercel.app/" title="Church Management System live preview" loading="lazy" />\n        </div>\n        <div className="cms-browser-footer">If the embedded preview is blocked, use ↗ Open to launch the live system.</div>\n      </div>\n    ),\n\n    skills: (
+    cms: (
+      <div className="cms-browser">
+        <div className="cms-browser-bar">
+          <span className="cms-browser-status">● LIVE</span>
+          <div className="cms-address">https://omp-church.vercel.app/</div>
+          <button
+            type="button"
+            onClick={() =>
+              window.open(
+                "https://omp-church.vercel.app/",
+                "_blank",
+                "noopener,noreferrer",
+              )
+            }
+          >
+            ↗ Open
+          </button>
+        </div>
+        <div className="cms-frame-wrap">
+          <iframe
+            className="cms-frame"
+            src="https://omp-church.vercel.app/"
+            title="Church Management System live preview"
+            loading="lazy"
+          />
+        </div>
+        <div className="cms-browser-footer">
+          If the embedded preview is blocked, use ↗ Open to launch the live system.
+        </div>
+      </div>
+    ),
+
+    skills: (
       <div className="skills-content">
         <div className="section-heading compact">
           <span>02</span>
