@@ -4748,3 +4748,60 @@ body.icon-dragging {
     font-size: clamp(17px, 5vw, 23px);
   }
 }
+
+
+/* Lock clock: HH:MM:SS AM/PM in one correctly ordered line */
+.lock-clock-row {
+  display: block;
+}
+
+.lock-clock {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+  white-space: nowrap;
+}
+
+.lock-clock .lock-seconds {
+  display: inline;
+  min-width: 0;
+  margin: 0;
+  font-size: 1em;
+  line-height: inherit;
+  color: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-shadow: inherit;
+}
+
+.lock-period {
+  display: inline-block;
+  margin-left: .24em;
+  font-size: .38em;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: .04em;
+  color: #f2bd79;
+  transform: translateY(-.08em);
+}
+
+/* Give the Recycle Bin toolbar proper breathing room */
+.recycle-bin-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 10px 12px;
+}
+
+.recycle-bin-toolbar > b {
+  flex: 1;
+  min-width: 0;
+}
+
+.recycle-bin-toolbar > button {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: 6px 10px;
+  white-space: nowrap;
+}
