@@ -3968,3 +3968,74 @@ input:focus-visible {
     bottom: 52px;
   }
 }
+
+
+/* Desktop icon layout: seven-item vertical column + CMD/Recycle beside the top icons */
+.desktop-icons {
+  display: grid;
+  grid-template-columns: 100px 100px;
+  grid-template-rows: repeat(7, auto);
+  grid-auto-flow: column;
+  align-content: start;
+  gap: 12px 10px;
+}
+
+/* Keep the first seven shortcuts in one vertical column. */
+.desktop-item:nth-child(-n + 7) {
+  grid-column: 1;
+}
+
+/* Command Prompt sits beside Portfolio; Recycle Bin beside About Me. */
+.desktop-item:nth-child(7) {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.desktop-item:nth-child(8) {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+/* Welcome.exe content can scroll when its content exceeds the window height. */
+.window-welcome .window-body {
+  max-height: min(620px, calc(100vh - 150px));
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #6f8797 #071522;
+}
+
+.window-welcome .window-body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.window-welcome .window-body::-webkit-scrollbar-track {
+  background: #071522;
+  border-left: 1px solid #020a10;
+}
+
+.window-welcome .window-body::-webkit-scrollbar-thumb {
+  background: #526f82;
+  border: 2px solid #071522;
+}
+
+.window-welcome .window-body::-webkit-scrollbar-thumb:hover {
+  background: #d79b5d;
+}
+
+.window-welcome .hero {
+  min-height: max-content;
+}
+
+@media (max-height: 760px) {
+  .window-welcome .window-body {
+    max-height: calc(100vh - 125px);
+  }
+}
+
+@media (max-width: 700px) {
+  .desktop-icons {
+    grid-template-columns: 88px 88px;
+    gap: 8px 6px;
+  }
+}
