@@ -884,13 +884,6 @@ function App() {
         </div>
       </section>
 
-      <div className="wall-copy">
-        <small>PERSONAL SYSTEM / 2026</small>
-        SMALL STEPS
-        <br />
-        <span>BIGGER THINGS.</span>
-      </div>
-
       {startMenuOpen && (
         <div
           className="start-menu"
