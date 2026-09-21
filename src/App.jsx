@@ -163,11 +163,6 @@ function App() {
   const selectionStart = useRef(null);
   const [contextMenu, setContextMenu] = useState(null);
   const [selectedIcons, setSelectedIcons] = useState([]);
-  const [iconPositions, setIconPositions] = useState({});
-  const [recycledIcons, setRecycledIcons] = useState([]);
-  const [recycleDrop, setRecycleDrop] = useState(null);
-  const [settlingIcons, setSettlingIcons] = useState([]);
-  const iconDrag = useRef(null);
   const desktopIconRefs = useRef({});
   const zIndex = useRef(20);
   const utilityDrag = useRef(null);
@@ -386,38 +381,6 @@ function App() {
     setSelectionBox({ x: event.clientX, y: event.clientY, width: 0, height: 0 });
   };
 
-  const startIconDrag = (event, label) => {
-    if (event.button !== 0 || locked || booting) return;
-    event.stopPropagation();
-    setContextMenu(null);
-
-    const clickedSelected = selectedIcons.includes(label);
-    const movingLabels = clickedSelected && selectedIcons.length
-      ? selectedIcons
-      : [label];
-
-    if (!clickedSelected) setSelectedIcons([label]);
-
-    const origins = {};
-    movingLabels.forEach((name) => {
-      const element = desktopIconRefs.current[name];
-      if (!element) return;
-      const rect = element.getBoundingClientRect();
-      origins[name] = { x: rect.left, y: rect.top };
-    });
-
-    iconDrag.current = {
-      startX: event.clientX,
-      startY: event.clientY,
-      lastX: event.clientX,
-      lastY: event.clientY,
-      labels: movingLabels,
-      origins,
-      moved: false,
-    };
-    document.body.classList.add("icon-dragging");
-  };
-
   const showDesktopContextMenu = (event) => {
     if (event.target !== event.currentTarget || locked || booting) return;
     event.preventDefault();
@@ -457,177 +420,18 @@ function App() {
       setSelectedIcons(hit);
     };
 
-    const moveIcons = (event) => {
-      const drag = iconDrag.current;
-      if (!drag || !drag.labels.length) return;
-
-      drag.lastX = event.clientX;
-      drag.lastY = event.clientY;
-      if (Math.abs(event.clientX - drag.startX) > 3 || Math.abs(event.clientY - drag.startY) > 3) {
-        drag.moved = true;
-      }
-
-      const dx = event.clientX - drag.startX;
-      const dy = event.clientY - drag.startY;
-      const labels = [...drag.labels];
-      const origins = { ...drag.origins };
-
-      setIconPositions((current) => {
-        const next = { ...current };
-        labels.forEach((label) => {
-          const origin = origins[label];
-          if (!origin) return;
-          next[label] = {
-            x: Math.max(16, Math.min(window.innerWidth - 116, origin.x + dx)),
-            y: Math.max(18, Math.min(window.innerHeight - 160, origin.y + dy)),
-          };
-        });
-        return next;
-      });
-
-      const recycleElement = desktopIconRefs.current["Recycle Bin"];
-      const recycleRect = recycleElement?.getBoundingClientRect();
-      const overRecycle = labels.some((label) => label !== "Recycle Bin") && recycleRect &&
-        event.clientX >= recycleRect.left && event.clientX <= recycleRect.right &&
-        event.clientY >= recycleRect.top && event.clientY <= recycleRect.bottom;
-      recycleElement?.classList.toggle("drop-target", Boolean(overRecycle));
-    };
-
-    const stopSelection = (event) => {
+    const stopSelection = () => {
       selectionStart.current = null;
-      const drag = iconDrag.current;
-
-      if (drag?.moved && drag.labels.length) {
-        const recycleElement = desktopIconRefs.current["Recycle Bin"];
-        const recycleRect = recycleElement?.getBoundingClientRect();
-        const droppedOnRecycle = recycleRect && event.clientX >= recycleRect.left &&
-          event.clientX <= recycleRect.right && event.clientY >= recycleRect.top &&
-          event.clientY <= recycleRect.bottom;
-
-        const recyclableLabels = drag.labels.filter((label) => label !== "Recycle Bin");
-        if (droppedOnRecycle && recyclableLabels.length) {
-          setRecycleDrop({ labels: recyclableLabels, x: event.clientX, y: event.clientY });
-          window.setTimeout(() => {
-            setRecycledIcons((current) => [...new Set([...current, ...recyclableLabels])]);
-            setSelectedIcons([]);
-            setRecycleDrop(null);
-          }, 420);
-        } else {
-          const gridX = 110;
-          const gridY = 104;
-          const labels = [...drag.labels];
-          const origins = { ...drag.origins };
-          const dx = event.clientX - drag.startX;
-          const dy = event.clientY - drag.startY;
-
-          setSettlingIcons(labels);
-          setIconPositions((current) => {
-            const next = { ...current };
-            const activeLabels = desktopItems
-              .map(([, label]) => label)
-              .filter((label) => !recycledIcons.includes(label));
-            const maxX = Math.max(16, window.innerWidth - 116);
-            const maxY = Math.max(18, window.innerHeight - 160);
-            const maxCols = Math.max(1, Math.floor((maxX - 16) / gridX) + 1);
-            const maxRows = Math.max(1, Math.floor((maxY - 18) / gridY) + 1);
-
-            const snap = (x, y) => ({
-              x: 16 + Math.min(maxCols - 1, Math.max(0, Math.round((x - 16) / gridX))) * gridX,
-              y: 18 + Math.min(maxRows - 1, Math.max(0, Math.round((y - 18) / gridY))) * gridY,
-            });
-            const keyOf = (p) => `${p.x}:${p.y}`;
-
-            const positions = {};
-            activeLabels.forEach((label, index) => {
-              const element = desktopIconRefs.current[label];
-              const rect = element?.getBoundingClientRect();
-              positions[label] = snap(
-                next[label]?.x ?? rect?.left ?? (16 + Math.floor(index / 7) * gridX),
-                next[label]?.y ?? rect?.top ?? (18 + (index % 7) * gridY),
-              );
-            });
-
-            const findNearestFree = (desired, occupied) => {
-              const baseCol = Math.round((desired.x - 16) / gridX);
-              const baseRow = Math.round((desired.y - 18) / gridY);
-              for (let radius = 0; radius <= Math.max(maxCols, maxRows); radius += 1) {
-                for (let rowOffset = -radius; rowOffset <= radius; rowOffset += 1) {
-                  for (let colOffset = -radius; colOffset <= radius; colOffset += 1) {
-                    if (Math.max(Math.abs(rowOffset), Math.abs(colOffset)) !== radius) continue;
-                    const col = baseCol + colOffset;
-                    const row = baseRow + rowOffset;
-                    if (col < 0 || row < 0 || col >= maxCols || row >= maxRows) continue;
-                    const candidate = { x: 16 + col * gridX, y: 18 + row * gridY };
-                    if (!occupied.has(keyOf(candidate))) return candidate;
-                  }
-                }
-              }
-              return desired;
-            };
-
-            const moving = new Set(labels);
-            const occupied = new Set(
-              activeLabels
-                .filter((label) => !moving.has(label))
-                .map((label) => keyOf(positions[label])),
-            );
-
-            labels.forEach((label) => {
-              const origin = origins[label];
-              if (!origin) return;
-              const desired = snap(origin.x + dx, origin.y + dy);
-              const occupant = activeLabels.find(
-                (other) => other !== label && !moving.has(other) && keyOf(positions[other]) === keyOf(desired),
-              );
-
-              if (occupant) {
-                occupied.delete(keyOf(positions[occupant]));
-                const displaced = findNearestFree(positions[occupant], new Set([...occupied, keyOf(desired)]));
-                positions[occupant] = displaced;
-                next[occupant] = displaced;
-                occupied.add(keyOf(displaced));
-                setSettlingIcons((currentLabels) => [...new Set([...currentLabels, occupant])]);
-              }
-
-              const target = occupied.has(keyOf(desired))
-                ? findNearestFree(desired, occupied)
-                : desired;
-              positions[label] = target;
-              next[label] = target;
-              occupied.add(keyOf(target));
-            });
-            return next;
-          });
-          window.setTimeout(() => setSettlingIcons([]), 320);
-        }
-      }
-
-      desktopIconRefs.current["Recycle Bin"]?.classList.remove("drop-target");
-      iconDrag.current = null;
-      document.body.classList.remove("icon-dragging");
       window.setTimeout(() => setSelectionBox(null), 90);
     };
 
     window.addEventListener("mousemove", moveSelection);
-    window.addEventListener("mousemove", moveIcons);
     window.addEventListener("mouseup", stopSelection);
     return () => {
       window.removeEventListener("mousemove", moveSelection);
-      window.removeEventListener("mousemove", moveIcons);
       window.removeEventListener("mouseup", stopSelection);
     };
   }, []);
-
-  const restoreIcon = (label) => {
-    setRecycledIcons((current) => current.filter((item) => item !== label));
-    setIconPositions((current) => {
-      const next = { ...current };
-      delete next[label];
-      return next;
-    });
-  };
-
-  const emptyRecycleBin = () => setRecycledIcons([]);
 
   const windowContent = {
     welcome: (
@@ -885,24 +689,12 @@ function App() {
       <div className="recycle-bin-content">
         <div className="recycle-bin-toolbar">
           <b>RECYCLE BIN</b>
-          <button type="button" onClick={emptyRecycleBin} disabled={!recycledIcons.length}>Empty Bin</button>
         </div>
-        {recycledIcons.length === 0 ? (
-          <div className="recycle-empty"><span>♲</span><p>Recycle Bin is empty.</p><small>Drag desktop icons onto the bin to store them here.</small></div>
-        ) : (
-          <div className="recycle-files">
-            {recycledIcons.map((label) => {
-              const item = desktopItems.find(([, name]) => name === label);
-              return (
-                <button key={label} type="button" onDoubleClick={() => restoreIcon(label)} title="Double-click to restore">
-                  <span>{item?.[0] || "□"}</span>
-                  <b>{label}</b>
-                  <small>Double-click to restore</small>
-                </button>
-              );
-            })}
-          </div>
-        )}
+        <div className="recycle-empty">
+          <span>♲</span>
+          <p>Recycle Bin is empty.</p>
+          <small>Desktop shortcuts are protected and cannot be deleted.</small>
+        </div>
       </div>
     ),
 
@@ -955,7 +747,12 @@ function App() {
       {!booting && locked && (
         <div className="lockscreen">
           <div className="lock-time">
-            <b>{now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</b>
+            <b className="lock-clock">
+              {now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              <span className="lock-seconds" key={now.getSeconds()}>
+                :{String(now.getSeconds()).padStart(2, "0")}
+              </span>
+            </b>
             <span>{now.toLocaleDateString([], { weekday: "long", month: "long", day: "numeric" })}</span>
           </div>
           <form className="lock-panel" onSubmit={unlockPortfolio}>
@@ -1106,12 +903,6 @@ function App() {
         />
       )}
 
-      {recycleDrop && (
-        <div className="recycle-drop-fx" style={{ left: recycleDrop.x, top: recycleDrop.y }}>
-          <span>♲</span>
-          <b>{recycleDrop.labels.length > 1 ? `${recycleDrop.labels.length} ITEMS` : recycleDrop.labels[0]}</b>
-        </div>
-      )}
 
       {contextMenu && (
         <div
@@ -1140,13 +931,11 @@ function App() {
       )}
 
       <aside className="desktop-icons">
-        {desktopItems.filter(([, label]) => !recycledIcons.includes(label)).map(([symbol, label, id, iconType]) => (
+        {desktopItems.map(([symbol, label, id, iconType]) => (
           <button
             ref={(element) => { desktopIconRefs.current[label] = element; }}
-            className={`desktop-item ${selectedIcons.includes(label) ? "selected" : ""} ${iconPositions[label] ? "free-position" : ""} ${settlingIcons.includes(label) ? "settling" : ""}`}
+            className={`desktop-item ${selectedIcons.includes(label) ? "selected" : ""}`}
             key={label}
-            style={iconPositions[label] ? { left: iconPositions[label].x, top: iconPositions[label].y } : undefined}
-            onMouseDown={(event) => startIconDrag(event, label)}
             onClick={() => iconType === "trash" && handleRecycleClick()}
             onDoubleClick={() => id && openWindow(id)}
           >
