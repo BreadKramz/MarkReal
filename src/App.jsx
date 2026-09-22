@@ -15,6 +15,7 @@ const definitions = {
   system: { title: "System_Info.exe", pos: { x: 785, y: 465 } },
   cmd: { title: "Command_Prompt.exe", pos: { x: 480, y: 280 } },
   recycle: { title: "Recycle_Bin.exe", pos: { x: 520, y: 210 } },
+  game: { title: "Byte_Catcher.exe", pos: { x: 430, y: 125 } },
 };
 
 const desktopItems = [
@@ -26,6 +27,7 @@ const desktopItems = [
   ["✉", "Contact", "contact", "mail"],
   [">_", "Command Prompt", "cmd", "terminal"],
   ["♲", "Recycle Bin", "recycle", "trash"],
+  ["◆", "Byte Catcher", "game", "game"],
 ];
 
 function RetroWindow({
@@ -179,6 +181,10 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [gameScore, setGameScore] = useState(0);
+  const [gameTime, setGameTime] = useState(20);
+  const [gameRunning, setGameRunning] = useState(false);
+  const [bytePosition, setBytePosition] = useState({ x: 48, y: 45 });
   const [command, setCommand] = useState("");
   const [commandHistory, setCommandHistory] = useState([
     "PortfolioOS Command Prompt [Version 2.0]",
@@ -500,6 +506,37 @@ function App() {
     };
   }, []);
 
+  const startByteGame = () => {
+    setGameScore(0);
+    setGameTime(20);
+    setBytePosition({ x: 48, y: 45 });
+    setGameRunning(true);
+  };
+
+  const catchByte = () => {
+    if (!gameRunning) return;
+    setGameScore((score) => score + 1);
+    setBytePosition({
+      x: 6 + Math.random() * 82,
+      y: 10 + Math.random() * 70,
+    });
+  };
+
+  useEffect(() => {
+    if (!gameRunning) return undefined;
+    const timer = window.setInterval(() => {
+      setGameTime((time) => {
+        if (time <= 1) {
+          window.clearInterval(timer);
+          setGameRunning(false);
+          return 0;
+        }
+        return time - 1;
+      });
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [gameRunning]);
+
   const windowContent = {
     welcome: (
       <div className="hero">
@@ -785,6 +822,45 @@ function App() {
             })}
           </div>
         )}
+      </div>
+    ),
+
+    game: (
+      <div className="byte-game">
+        <div className="byte-game-head">
+          <div>
+            <small>PORTFOLIO OS // MINI GAME</small>
+            <h3>BYTE CATCHER</h3>
+          </div>
+          <div className="byte-game-stats">
+            <span>SCORE <b>{gameScore}</b></span>
+            <span>TIME <b>{gameTime}s</b></span>
+          </div>
+        </div>
+        <div className="byte-game-arena">
+          {!gameRunning && (
+            <div className="byte-game-overlay">
+              <b>{gameTime === 0 ? "TIME UP!" : "CATCH THE BYTE"}</b>
+              <p>{gameTime === 0 ? `Final score: ${gameScore}` : "Click the moving data byte as many times as you can in 20 seconds."}</p>
+              <button type="button" onClick={startByteGame}>
+                {gameTime === 0 ? "PLAY AGAIN" : "START GAME"}
+              </button>
+            </div>
+          )}
+          {gameRunning && (
+            <button
+              type="button"
+              className="byte-target"
+              style={{ left: `${bytePosition.x}%`, top: `${bytePosition.y}%` }}
+              onClick={catchByte}
+              aria-label="Catch byte"
+            >
+              ◆
+            </button>
+          )}
+          <div className="byte-grid" />
+        </div>
+        <div className="byte-game-foot">TIP: speed + accuracy = high score</div>
       </div>
     ),
 
